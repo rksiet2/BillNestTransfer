@@ -1,0 +1,76 @@
+name: Build Android APK (demo/local mobile build)
+
+# Builds the BillNest "demo_local" Android APK using GitHub's hosted runners,
+# which come with Android SDK + JDK 17 preinstalled — this sidesteps the local
+# environment gap (no Android SDK/Gradle/JDK17 available on the dev machine).
+#
+# Scope reminder: this mobile build uses src/mobile/webApi.js, a localStorage
+# -backed data layer. It does NOT sync with the desktop app or across devices
+# — each phone install has its own independent local data. Cross-device sync
+# is a separate, not-yet-built roadmap item (see TODO: roadmap-mobile-web-sync).
+#
+# How to run this:
+#   1. Push this repo to GitHub (if not already).
+#   2. Go to the "Actions" tab → "Build Android APK" workflow → "Run workflow".
+#   3. When it finishes, download the "billnest-debug-apk" artifact from the
+#      run's summary page — that's the installable .apk file.
+#
+# This produces a DEBUG (unsigned) APK, which is fine for sharing with a few
+# people to test on their own Android phone (they'll need to allow "install
+# from unknown sources" once). It is NOT signed for Play Store distribution.
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'android/**'
+      - 'capacitor.config.json'
+      - 'package.json'
+      - '.github/workflows/build-apk.yml'
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build web assets (Vite)
+        run: npm run build
+
+      - name: Sync Capacitor Android project with latest web build
+        run: npx cap sync android
+
+      - name: Make gradlew executable
+        run: chmod +x android/gradlew
+
+      - name: Build debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: billnest-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error

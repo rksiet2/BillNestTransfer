@@ -1,0 +1,4670 @@
+:root {
+  --bg-dark: #0f172a;
+  --bg-panel: #111827;
+  --bg-card: #ffffff;
+  --bg-app: #f8fafc;
+  --accent: #e11d48;
+  --accent-dark: #be123c;
+  --accent-light: #fb7185;
+  --success: #16a34a;
+  --danger: #dc2626;
+  --text-light: #f8fafc;
+  --text-heading: #1f2937;
+  --text-body: #4b5563;
+  --text-muted: #64748b;
+  --border: #e5e7eb;
+  --border-soft: #f0f1f3;
+  --radius: 10px;
+  --radius-btn: 8px;
+  --shadow-card: 0 1px 2px rgba(15,23,42,0.04), 0 1px 6px rgba(15,23,42,0.04);
+  --shadow-card-hover: 0 8px 20px rgba(15,23,42,0.08);
+  --sidebar-w: 220px;
+  --font-heading: 'Poppins', 'Segoe UI', sans-serif;
+  --font-body: 'DM Sans', 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  /* Safety net: on phone-width screens, a few flex rows (topbar, cart rows)
+     can slightly exceed the viewport if content doesn't wrap — this stops
+     the whole app from horizontally scrolling into blank space instead of
+     just clipping/wrapping the offending row. */
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-app);
+  color: var(--text-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-heading);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* ---------- App shell ---------- */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.app-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  height: 100vh;
+  font-size: 1.2rem;
+  background: var(--bg-dark, #0f172a);
+  color: var(--text-light, #f8fafc);
+}
+.app-loading img {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35);
+}
+.app-loading-text {
+  font-size: 0.95rem;
+  opacity: 0.75;
+}
+
+.activation-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: var(--bg-dark, #1a1a2e);
+  padding: 20px;
+}
+
+.activation-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.activation-card h1 {
+  margin: 0 0 8px;
+  font-size: 1.4rem;
+}
+
+.activation-reason {
+  color: #555;
+  margin-bottom: 24px;
+  line-height: 1.4;
+}
+
+.activation-section {
+  margin-bottom: 18px;
+}
+
+.activation-section label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+}
+
+.activation-machine-id-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.activation-machine-id {
+  flex: 1;
+  background: #f2f2f7;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  word-break: break-all;
+}
+
+.activation-hint {
+  color: #888;
+  font-size: 0.82rem;
+  margin: 6px 0 0;
+}
+
+.activation-section textarea {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-family: monospace;
+  font-size: 0.85rem;
+  resize: vertical;
+}
+
+.activation-error {
+  color: #c0392b;
+  font-size: 0.88rem;
+  margin: 0 0 14px;
+}
+
+.activation-submit {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-dark);
+  color: var(--text-light);
+  padding: 10px 20px;
+  flex-shrink: 0;
+}
+
+.app-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 64px;
+}
+.app-brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: var(--bg-dark);
+  overflow: hidden;
+}
+.app-brand-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.topbar h1 {
+  font-size: 1.15rem;
+  margin: 0;
+  color: var(--text-light);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.counter-connection-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 170px;
+  padding: 6px 9px;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 999px;
+  color: #e2e8f0;
+  font-size: .72rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+.counter-connection-badge.online { background: rgba(22,163,74,.18); }
+.counter-connection-badge.offline { background: rgba(220,38,38,.18); }
+.counter-connection-dot { width: 8px; height: 8px; flex: 0 0 8px; border-radius: 50%; background: #94a3b8; }
+.counter-connection-badge.online .counter-connection-dot { background: #4ade80; }
+.counter-connection-badge.offline .counter-connection-dot { background: #f87171; }
+
+.module-switch {
+  display: flex;
+  gap: 2px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 999px;
+  padding: 3px;
+  flex-shrink: 0;
+}
+.module-switch button {
+  background: transparent;
+  border: none;
+  color: var(--text-light);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0.75;
+  transition: background 0.15s, opacity 0.15s;
+}
+.module-switch button:hover { opacity: 1; }
+.module-switch button.active {
+  background: var(--accent, #e11d48);
+  color: #fff;
+  opacity: 1;
+}
+
+.icon-btn, .hamburger {
+  background: transparent;
+  border: none;
+  color: var(--text-light);
+  font-size: 1.2rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+.icon-btn:hover, .hamburger:hover { background: rgba(255,255,255,0.1); }
+.hamburger { display: none; }
+
+/* ---------- Incoming Orders Bell (Zomato/Swiggy/MMT) ---------- */
+.incoming-orders-bell { position: relative; }
+.bell-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: var(--danger, #dc2626);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  border-radius: 999px;
+  min-width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+}
+.incoming-orders-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  width: 320px;
+  max-height: 420px;
+  overflow-y: auto;
+  background: #fff;
+  color: var(--text, #1e293b);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  z-index: 50;
+  padding: 12px;
+}
+.incoming-orders-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.modal-close-inline { background: none; border: none; font-size: 1rem; cursor: pointer; color: inherit; }
+.incoming-order-card {
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+}
+.incoming-order-card-header { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; margin-bottom: 6px; }
+.incoming-order-items { margin: 0 0 8px; padding-left: 18px; font-size: 0.8rem; color: #475569; }
+.incoming-order-actions { display: flex; gap: 8px; }
+.btn-small { padding: 5px 10px; font-size: 0.78rem; }
+.status-badge.status-zomato { background: #fee2e2; color: #b91c1c; }
+.status-badge.status-swiggy { background: #ffedd5; color: #c2410c; }
+.status-badge.status-mmt { background: #dbeafe; color: #1e40af; }
+.toast-error {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  margin-bottom: 8px;
+}
+
+.app-body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  position: relative;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+  width: 64px;
+  background: #ffffff;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px 8px;
+  gap: 4px;
+  flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 30;
+  transition: width 0.18s ease;
+}
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.sidebar-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.nav-item-settings {
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+}
+.sidebar-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 6px 2px;
+  border-top: 1px solid var(--border-soft);
+  margin-top: 4px;
+}
+.sidebar-footer img {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  flex-shrink: 0;
+}
+.sidebar-footer .nav-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.sidebar:hover {
+  width: var(--sidebar-w);
+  box-shadow: 2px 0 16px rgba(15,23,42,0.08);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  border: none;
+  border-left: 3px solid transparent;
+  color: #475569;
+  padding: 12px 12px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+.nav-item:hover { background: #fff1f2; color: var(--accent-dark); transform: translateX(2px); }
+.nav-item.active {
+  background: #fee2e6;
+  color: var(--accent-dark);
+  border-left-color: var(--accent);
+  font-weight: 600;
+  box-shadow: none;
+}
+.nav-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 9px;
+  background: #f3f4f6;
+  border: 1.5px solid transparent;
+  color: #6b7280;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.nav-item.active .nav-icon,
+.nav-item:hover .nav-icon {
+  background: var(--accent);
+  color: #fff;
+}
+.nav-label {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.sidebar:hover .nav-label { opacity: 1; }
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  min-width: 0;
+}
+
+/* Page heading (icon + title) shown above every screen's content so it's
+   always clear which page you're on — mirrors the label already used for
+   that page's sidebar nav item. */
+.page-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 14px;
+  flex-shrink: 0;
+}
+.page-heading-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--accent-soft, #fdecec);
+  color: var(--accent, #d0202e);
+  flex-shrink: 0;
+}
+.page-heading-title {
+  font-family: var(--font-heading, inherit);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-strong, #1f2937);
+  margin: 0;
+}
+
+
+/* When a billing/search page is active, the page itself manages internal
+   scrolling (menu grid scrolls, cart panel stays fixed in place) instead of
+   the whole .content area scrolling. */
+.content:has(.billing-page) {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* ---------- Billing page ---------- */
+.billing-page {
+  display: flex;
+  gap: 16px;
+  flex: 1;
+  min-height: 0;
+  align-items: flex-start;
+}
+
+.menu-section {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.category-tabs-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.category-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cat-clear-btn {
+  flex-shrink: 0;
+  background: white;
+  border: 1px solid var(--border);
+  color: var(--danger);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+.cat-clear-btn:hover { background: #fef2f2; border-color: var(--danger); }
+
+.cat-tab {
+  background: white;
+  border: 1px solid var(--border);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #374151;
+  transition: all 0.15s ease;
+}
+.cat-tab:hover { border-color: var(--accent-light); transform: translateY(-1px); }
+.cat-tab.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+  box-shadow: 0 1px 3px rgba(225,29,72,0.25);
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  gap: 8px;
+}
+.search-bar input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 0.95rem;
+}
+.search-clear { background: transparent; border: none; color: var(--text-muted); }
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-bottom: 8px;
+  align-content: start;
+}
+.popular-items { flex: 0 0 auto; min-width: 0; }
+.popular-items-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 7px; }
+.popular-items-heading h2 { margin: 0; font-size: .95rem; }
+.popular-items-heading span { color: var(--text-muted); font-size: .75rem; }
+.popular-items-row { display: flex; gap: 9px; overflow-x: auto; padding: 2px 1px 7px; scrollbar-width: thin; }
+.quick-pick-card { flex: 0 0 148px; padding: 9px 8px; }
+.quick-pick-card .food-image { width: 56px !important; height: 56px !important; }
+.quick-pick-card .food-card-info h4 { max-width: 126px; font-size: .8rem; }
+.quick-pick-card .food-price { font-size: .82rem; }
+.quick-pick-card .btn-add { min-height: 36px; padding: 6px 12px; }
+.popular-items-error { margin: 0; color: var(--text-muted); font-size: .8rem; }
+
+.food-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 14px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border-soft);
+  text-align: center;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+}
+.food-card:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-2px); border-color: var(--border); }
+.food-card.unavailable { opacity: 0.5; }
+
+.food-image-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, #f8fafc 78%, transparent 80%);
+}
+.food-image {
+  border-radius: 10px;
+  object-fit: cover;
+  background: #f8fafc;
+  box-shadow: 0 4px 10px rgba(15,23,42,0.08);
+}
+.food-image.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #f8fafc, #f1f5f9);
+  box-shadow: inset 0 0 0 1px var(--border-soft);
+}
+
+.food-card-info h4 {
+  margin: 0;
+  font-size: 0.9rem;
+  max-width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.food-price { margin: 2px 0 0; font-weight: 600; color: var(--accent-dark); }
+
+.veg-badge {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  width: 16px;
+  height: 16px;
+  background: white;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+}
+.veg-badge.veg { border: 2px solid #16a34a; }
+.veg-badge.nonveg { border: 2px solid #dc2626; }
+.veg-badge-dot { width: 6px; height: 6px; border-radius: 50%; }
+.veg-badge.veg .veg-badge-dot { background: #16a34a; }
+.veg-badge.nonveg .veg-badge-dot { background: #dc2626; }
+.veg-badge-inline {
+  position: static;
+  display: inline-flex;
+  vertical-align: middle;
+  box-shadow: none;
+}
+
+.btn {
+  border: none;
+  border-radius: var(--radius-btn);
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease, background 0.15s ease;
+  box-shadow: none;
+}
+.btn:active { transform: translateY(1px) scale(0.98); }
+.btn-add {
+  background: #fee2e6;
+  color: var(--accent-dark);
+  width: 100%;
+  border: 1px solid #fecdd3;
+  box-shadow: none;
+  min-height: 40px;
+}
+.btn-add:hover:not(:disabled) { background: #fecdd3; }
+.btn-add:disabled { background: #f1f5f9; color: #94a3b8; border-color: #e2e8f0; cursor: not-allowed; box-shadow: none; }
+.btn-primary {
+  background: var(--accent);
+  color: white;
+  box-shadow: 0 1px 3px rgba(225,29,72,0.25);
+}
+.btn-primary:hover:not(:disabled) { background: var(--accent-dark); box-shadow: 0 2px 6px rgba(225,29,72,0.3); }
+.btn-primary:disabled { background: #d1d5db; cursor: not-allowed; box-shadow: none; }
+.btn-secondary {
+  background: #fff;
+  color: var(--text-heading);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: #f9fafb; border-color: #d1d5db; transform: translateY(-1px); }
+.btn-danger {
+  background: var(--danger);
+  color: white;
+  box-shadow: 0 1px 3px rgba(220,38,38,0.25);
+}
+.btn-danger:hover { background: #b91c1c; transform: translateY(-1px); }
+
+.qty-stepper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff1f2;
+  border-radius: 20px;
+  padding: 4px 8px;
+}
+.qty-btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  font-size: 1rem;
+  line-height: 1;
+  box-shadow: none;
+}
+.qty-btn:disabled { background: #d1d5db; }
+.qty-value { min-width: 18px; text-align: center; font-weight: 600; }
+.qty-stepper-sm .qty-btn { width: 20px; height: 20px; font-size: 0.85rem; }
+.cart-panel .qty-stepper-sm .qty-btn { width: 32px; height: 32px; font-size: 1rem; }
+.cart-panel .remove-btn { min-width: 36px; min-height: 36px; }
+
+/* ---------- Cart panel ---------- */
+.cart-panel {
+  width: 340px;
+  flex-shrink: 0;
+  background: white;
+  border-radius: 16px;
+  border: 1px solid var(--border-soft);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+.cart-panel > * { flex-shrink: 0; }
+.cart-panel > .cart-scroll-area {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cart-header h3 { margin: 0; }
+.cart-count { color: var(--text-muted); font-size: 0.85rem; }
+
+.cart-table-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+  color: #3730a3;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+.cart-table-badge .btn-link { margin-left: auto; font-size: 0.8rem; }
+.table-save-status { margin-left: auto; color: #166534; font-size: .72rem; white-space: nowrap; }
+.table-save-status.saving { color: #a16207; }
+.table-save-status.error { color: #b91c1c; font-weight: 700; }
+.table-save-status.idle { color: var(--text-muted); }
+
+.customer-input {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cart-item {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: #fdf2f4;
+  border-left: 3px solid var(--accent-light);
+  border-radius: 8px;
+}
+.cart-item-info { display: flex; flex-direction: column; overflow: hidden; }
+.cart-item-name { font-size: 0.88rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cart-item-price { font-size: 0.75rem; color: var(--text-muted); }
+.cart-item-total { font-weight: 600; font-size: 0.85rem; min-width: 60px; text-align: right; }
+.remove-btn { background: transparent; border: none; color: var(--danger); font-size: 0.9rem; }
+
+.payment-method { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem; color: var(--text-muted); }
+.payment-options { display: flex; gap: 8px; }
+.pay-btn {
+  flex: 1;
+  border: 1px solid var(--border);
+  background: white;
+  min-height: 44px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 650;
+}
+.pay-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+.cart-billing-options {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  border-top: 1px dashed var(--border);
+  padding-top: 8px;
+  font-size: 0.85rem;
+}
+.cart-billing-options .tax-rate-select { flex: 1; min-width: 140px; }
+.cart-billing-options label { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 100px; color: var(--text-muted); }
+.cart-billing-options input {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+.cart-summary { border-top: 1px dashed var(--border); padding-top: 8px; display: flex; flex-direction: column; gap: 4px; flex: 0 0 auto; }
+.summary-row { display: flex; justify-content: space-between; font-size: 0.9rem; }
+.total-row { font-weight: 700; font-size: 1.05rem; border-top: 1px solid var(--border); padding-top: 6px; }
+.cart-actions .btn-primary { min-height: 46px; font-size: .95rem; box-shadow: 0 3px 10px rgba(225,29,72,.18); }
+.cart-print-options { flex: 0 0 auto; border-top: 1px solid var(--border-soft); padding-top: 8px; }
+.cart-print-options summary { color: var(--text-muted); cursor: pointer; font-size: .8rem; font-weight: 650; padding: 3px 0; }
+.cart-print-options[open] summary { color: var(--text); }
+.cart-print-options .cart-actions-print { margin-top: 7px; }
+
+.cart-actions { display: flex; gap: 8px; }
+.cart-actions .btn { flex: 1; }
+.cart-actions-print { margin-top: 6px; flex-wrap: wrap; }
+.cart-actions-print .btn { flex: 1; min-width: 120px; font-size: 0.8rem; padding: 8px 6px; }
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--accent, #e11d48);
+  color: var(--accent, #e11d48);
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.btn-outline:hover:not(:disabled) { background: var(--accent, #e11d48); color: #fff; }
+.btn-outline:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.error-text { color: var(--danger); font-size: 0.85rem; }
+
+.toast-success {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #16a34a;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 50;
+  max-width: 340px;
+}
+
+/* ---------- Modal ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.modal {
+  background: white;
+  border-radius: 16px;
+  padding: 20px 24px;
+  max-width: 420px;
+  width: 90%;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(15,23,42,0.18), 0 4px 12px rgba(15,23,42,0.08);
+}
+/* Reset default browser heading margins inside modals — without this, the
+   modal title and each section heading (Guest Details/Room Details) stack
+   their own default top+bottom margins on top of the section's border/
+   padding, producing the uneven, oversized gaps seen in the New Booking form. */
+.modal h3 { margin: 0 0 14px; padding-bottom: 12px; border-bottom: 1px solid var(--border); font-size: 1.15rem; }
+.modal h4 { margin: 0; font-size: 0.95rem; }
+.modal-wide { max-width: 640px; max-height: 85vh; overflow-y: auto; overflow-x: hidden; }
+@media (max-width: 768px) {
+  .modal-wide { width: 95%; max-height: 90vh; padding: 16px 16px 20px; }
+  .scan-menu-preview img { max-height: 220px; }
+}
+@media (max-width: 480px) {
+  .modal-wide { width: 100%; max-height: 100vh; height: 100vh; border-radius: 0; margin: 0; }
+}
+
+/* ---------- Global responsive safety net ----------
+   Page-specific mobile rules above handle specialized views. These shared
+   rules cover the remaining screens (dashboard, reports, inventory, rooms,
+   staff, tables and modals) so every route can shrink without clipped
+   flex/grid children or unreadable desktop-sized controls. */
+@media screen and (max-width: 768px) {
+  .content,
+  .content > *,
+  .page-heading,
+  .page-heading > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .page-heading-title {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .dashboard-welcome,
+  .dashboard-header,
+  .report-header,
+  .section-header,
+  .card-header,
+  .fm-list-header,
+  .printer-section-heading {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .dashboard-welcome > *,
+  .dashboard-header > *,
+  .report-header > *,
+  .section-header > *,
+  .card-header > *,
+  .fm-list-header > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .dashboard-metrics,
+  .stat-cards,
+  .report-grid,
+  .report-cards,
+  .inventory-grid,
+  .room-grid,
+  .menu-grid,
+  .tables-grid {
+    min-width: 0;
+  }
+  .report-card,
+  .stat-card,
+  .dashboard-metric,
+  .fm-form-card,
+  .fm-list-card,
+  .integration-card,
+  .settings-section,
+  .modal,
+  .card {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .fm-table-wrapper,
+  .table-wrapper,
+  .report-table-wrapper,
+  .data-table-wrapper {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .fm-table,
+  .data-table,
+  .report-table {
+    min-width: 560px;
+  }
+  .form-row,
+  .form-grid,
+  .filter-row,
+  .search-row,
+  .action-row,
+  .recipe-row,
+  .incoming-order-actions {
+    flex-wrap: wrap;
+  }
+  .form-row > *,
+  .form-grid > *,
+  .filter-row > *,
+  .search-row > *,
+  .action-row > *,
+  .recipe-row > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .form-row input,
+  .form-row select,
+  .form-row textarea,
+  .form-grid input,
+  .form-grid select,
+  .form-grid textarea,
+  .filter-row input,
+  .filter-row select,
+  .search-row input,
+  .search-row select {
+    width: 100%;
+  }
+  .modal,
+  .modal-wide {
+    width: min(95vw, 640px);
+    max-height: calc(100dvh - 20px);
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .modal-actions,
+  .modal-footer {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .modal-actions .btn,
+  .modal-footer .btn {
+    flex: 1 1 140px;
+  }
+  .help-panel,
+  .settings-hint,
+  .sync-test-note,
+  .low-stock-banner,
+  .toast-error {
+    overflow-wrap: anywhere;
+  }
+  pre,
+  code {
+    max-width: 100%;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .room-cal-toolbar,
+  .room-cal-header,
+  .room-cal-actions {
+    flex-wrap: wrap;
+  }
+  .room-cal-scroll {
+    max-width: 100%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .content {
+    padding: 10px;
+  }
+  .page-heading-title {
+    font-size: 1rem;
+  }
+  .dashboard-metrics,
+  .stat-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .dashboard-metric,
+  .stat-card {
+    padding: 10px;
+  }
+  .dashboard-metric h3,
+  .stat-card h3 {
+    font-size: .78rem;
+  }
+  .dashboard-metric strong,
+  .stat-card strong {
+    font-size: 1.05rem;
+  }
+  .report-period-tabs,
+  .tables-status-tabs {
+    gap: 5px;
+  }
+  .report-period-tabs > *,
+  .tables-status-tab {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 6px 8px;
+    font-size: .72rem;
+    text-align: center;
+  }
+  .modal,
+  .modal-wide {
+    width: 100%;
+    max-height: 100dvh;
+    border-radius: 0;
+  }
+  .btn,
+  .btn-small {
+    max-width: 100%;
+  }
+  .top-sellers-table {
+    min-width: 0;
+    font-size: .78rem;
+  }
+  .top-sellers-table th,
+  .top-sellers-table td {
+    padding: 9px 6px;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+  .top-sellers-table th {
+    font-size: .7rem;
+    white-space: normal;
+  }
+  .top-sellers-table th:nth-child(2),
+  .top-sellers-table td:nth-child(2) {
+    white-space: nowrap;
+    text-align: right;
+  }
+}
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
+.modal-close {
+  position: absolute; top: 10px; right: 10px;
+  background: transparent; border: none; font-size: 1.1rem;
+}
+
+/* ---------- Empty state ---------- */
+.empty-state { color: var(--text-muted); padding: 20px; text-align: center; }
+.empty-state.small { padding: 10px; font-size: 0.85rem; }
+
+/* ---------- Food Management ---------- */
+.food-management { display: flex; gap: 16px; flex-wrap: wrap; min-width: 0; max-width: 100%; }
+.fm-form-card, .fm-list-card {
+  background: white;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 16px;
+  min-width: 0;
+}
+.fm-form-card { width: 320px; flex-shrink: 0; }
+.fm-list-card { flex: 1; min-width: 320px; max-width: 100%; }
+
+.fm-form { display: flex; flex-direction: column; gap: 10px; }
+.fm-form label, .settings-form label { display: flex; flex-direction: column; gap: 4px; font-size: 0.85rem; color: #374151; }
+.fm-form input, .fm-form select,
+.settings-form input, .settings-form textarea {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+.fm-image-row { display: flex; align-items: center; gap: 10px; }
+.checkbox-label { flex-direction: row !important; align-items: center; gap: 6px !important; }
+.fm-food-type-row { display: flex; align-items: center; gap: 14px; margin: 4px 0; }
+.fm-food-type-label { font-size: 0.85rem; color: var(--text-muted, #666); font-weight: 500; }
+.radio-label { display: inline-flex !important; flex-direction: row !important; align-items: center !important; gap: 6px !important; cursor: pointer; font-size: 0.95rem; }
+.radio-label input[type="radio"] { margin: 0; }
+.sales-history-note { font-size: 0.82rem; color: var(--text-muted, #666); margin: 0 0 8px; }
+.sales-history-pagination { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 12px; font-size: 0.9rem; color: var(--text-muted, #666); }
+.sales-history-pagination button { padding: 6px 14px; }
+.bookings-period-tabs { margin-top: 4px; }
+.bookings-filter-title { margin: 0; font-size: 1.05rem; }
+.bookings-filter-group { margin-bottom: 12px; }
+.bookings-filter-label { display: block; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; color: var(--text-muted, #888); margin-bottom: 6px; }
+/* Widened from 420px — at the old width the placeholder text ("Search
+   bookings by guest name, phone, booking no, or bill no…") got visually
+   clipped on desktop. A soft shadow + slightly bigger radius also makes it
+   read as a proper search control instead of a plain bare input. */
+.bookings-search-bar { position: relative; max-width: 620px; width: 100%; }
+.bookings-search-input {
+  width: 100%;
+  padding: 10px 34px 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border, #e2e8f0);
+  font-size: 0.88rem;
+  background: var(--surface, #fff);
+  box-shadow: 0 1px 2px rgba(15,23,42,0.04);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.bookings-search-input:focus {
+  outline: none;
+  border-color: var(--accent, #2563eb);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+}
+.bookings-search-clear {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--text-muted, #888);
+  font-size: 0.85rem;
+  padding: 2px 4px;
+}
+.booking-balance-cell { display: flex; flex-direction: column; gap: 2px; font-size: 0.8rem; white-space: nowrap; }
+.booking-balance-cell strong { color: var(--danger, #dc2626); }
+.checkout-summary { display: flex; flex-direction: column; gap: 6px; background: #fff1f2; border: 1px solid #ffd7dd; border-radius: var(--radius); padding: 12px 14px; margin-bottom: 12px; font-size: 0.9rem; }
+.checkout-summary strong { font-size: 1rem; }
+.checkout-due-positive { color: var(--danger, #dc2626); }
+
+/* Bookings: mobile card list is hidden by default (desktop shows the table);
+   the @media (max-width: 768px) block flips this. */
+.bookings-mobile-cards { display: none; }
+.booking-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+  background: var(--surface, #fff);
+}
+.booking-card-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 10px;
+  padding: 12px 14px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+}
+.booking-card-main { display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1; text-align: left; }
+.booking-card-guest { font-weight: 700; font-size: 0.92rem; }
+.booking-card-room { font-size: 0.8rem; color: var(--text-muted, #777); }
+.booking-card-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.booking-card-arrow {
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--text-muted, #999);
+  transition: transform 0.15s ease;
+}
+.booking-card.expanded .booking-card-arrow { transform: rotate(90deg); color: var(--accent-dark); }
+.booking-card-details {
+  padding: 4px 14px 14px;
+  border-top: 1px dashed var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.booking-card-row { display: flex; justify-content: space-between; font-size: 0.85rem; padding-top: 8px; }
+.booking-card-row strong { color: var(--danger, #dc2626); }
+.booking-card-details .fm-row-actions { margin-top: 4px; }
+.booking-card-subblock { border-top: 1px solid var(--border); padding-top: 8px; margin-top: 4px; }
+.booking-group-row td { font-weight: 600; background: #fafbff; }
+.booking-group-subrow td { background: #f7f8fc; font-size: 0.92em; }
+.booking-group-subrow td:nth-child(3) { font-style: italic; }
+
+/* Generic "simple card" — reused by any mobile card list (Rooms, Food, etc.)
+   whose table has few enough columns that everything can stay visible at
+   once, with no expand/collapse needed. */
+.rooms-mobile-cards, .food-mobile-cards, .bills-mobile-cards, .staff-mobile-cards, .rawmaterials-mobile-cards, .purchases-mobile-cards, .expenses-mobile-cards { display: none; }
+.simple-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  background: var(--surface, #fff);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.simple-card-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.simple-card-title { font-weight: 700; font-size: 0.92rem; }
+.simple-card-row { display: flex; justify-content: space-between; font-size: 0.85rem; }
+.simple-card .fm-row-actions { margin-top: 2px; }
+.fm-form-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.fm-category-form { display: flex; gap: 8px; margin-top: 14px; border-top: 1px dashed var(--border); padding-top: 12px; }
+.fm-category-form input { flex: 1; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; }
+
+.tax-rate-select-row { display: flex; gap: 6px; }
+.tax-rate-select-row select {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background: var(--surface, #fff);
+  color: inherit;
+}
+.tax-rate-custom-input {
+  width: 90px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.fm-list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 10px; flex-wrap: wrap; }
+.fm-list-header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.btn-icon-only {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text-primary, #333);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.btn-icon-only:hover:not(:disabled) { background: #f1f5f9; border-color: var(--accent, #e11d48); }
+.btn-icon-only:disabled { opacity: 0.4; cursor: not-allowed; }
+.fm-table-wrapper { overflow-x: auto; }
+.staff-desktop-table { margin-top: 18px; }
+.fm-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.fm-table th, .fm-table td { text-align: left; padding: 8px; border-bottom: 1px solid var(--border-soft); vertical-align: middle; }
+.fm-table th { color: var(--text-heading); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; background: #f8fafc; }
+.fm-table tr:hover td { background: #fafbfc; }
+/* min-height keeps every row the same height even when a row has zero
+   action buttons (e.g. a CANCELLED booking has no Edit/Check-in/Cancel
+   buttons) — otherwise the empty cell collapses and the row divider line
+   shifts up, breaking alignment with the Status/Total columns beside it. */
+.fm-row-actions { display: flex; gap: 6px; flex-wrap: wrap; min-height: 26px; align-items: center; }
+.fm-row-actions .btn-link { min-width: 66px; text-align: center; }
+/* Bookings desktop table: action buttons stack one-per-line (not side by
+   side) so a row with several actions (Edit/Check In/Cancel/+Add Room etc.)
+   never gets squeezed into — or overflows — the narrow Actions column at
+   the end of an already-wide table. */
+.bookings-desktop-table .fm-row-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+}
+.bookings-desktop-table .fm-row-actions .btn-link { width: 100%; min-width: 0; }
+.btn-link {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(37,99,235,0.25);
+  color: var(--accent-dark);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 4px 9px;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s;
+}
+.btn-link:hover { background: rgba(255,255,255,0.09); }
+.btn-link.danger { color: var(--danger); border-color: rgba(239,68,68,0.25); }
+.btn-link.warning { color: #d97706; border-color: rgba(217,119,6,0.25); }
+.btn-link.success { color: #16a34a; border-color: rgba(22,163,74,0.25); }
+.btn-link:disabled {
+  background: rgba(0,0,0,0.03);
+  border-color: rgba(0,0,0,0.1);
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+.btn-link:disabled:hover { background: rgba(0,0,0,0.03); }
+
+/* ---------- Reporting ---------- */
+.reporting-page { display: flex; flex-direction: column; gap: 16px; }
+.report-source-switch { align-self: flex-start; display: flex; gap: 8px; flex-wrap: wrap; }
+.report-period-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+.custom-range-bar {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  background: #fff1f2;
+  border: 1px solid #ffd7dd;
+  border-radius: var(--radius);
+  padding: 10px 16px;
+  margin: 8px 0 12px;
+}
+.custom-range-bar label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary, #555);
+}
+.custom-range-bar input[type="date"] {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-family: inherit;
+  background: white;
+}
+.custom-range-error { color: var(--accent-dark, #be123c); font-size: 12px; font-weight: 600; }
+.stat-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.stat-card {
+  background: white;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-soft);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+.stat-card:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-2px); }
+.stat-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: #fee2e6;
+  color: var(--accent-dark);
+  margin-bottom: 4px;
+}
+.stat-label { font-size: 0.8rem; color: var(--text-muted); }
+.stat-value { font-size: 1.4rem; font-weight: 700; color: var(--text-heading); font-family: var(--font-heading); }
+.stat-value.small { font-size: 1rem; }
+.stat-value.negative { color: var(--danger); }
+
+.report-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+.report-card {
+  background: white;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-soft);
+  padding: 16px;
+  box-shadow: var(--shadow-card);
+  min-width: 0;
+  overflow: hidden;
+}
+.report-card h4 { margin-top: 0; }
+.top-sellers-table { table-layout: fixed; }
+.top-sellers-table th:first-child,
+.top-sellers-table td:first-child { width: 50%; overflow-wrap: anywhere; }
+.top-sellers-table th:nth-child(2),
+.top-sellers-table td:nth-child(2) { width: 20%; }
+.top-sellers-table th:nth-child(3),
+.top-sellers-table td:nth-child(3) { width: 30%; text-align: right; white-space: nowrap; }
+
+.trend-chart-svg-wrap {
+  position: relative;
+  width: 100%;
+}
+.trend-chart-svg {
+  width: 100%;
+  height: 220px;
+  display: block;
+  overflow: visible;
+  cursor: crosshair;
+}
+.trend-axis-label {
+  font-size: 9px;
+  fill: var(--text-muted);
+  font-family: var(--font-body);
+}
+.trend-dot { transition: r 0.1s ease; }
+.trend-tooltip {
+  position: absolute;
+  transform: translate(-50%, -115%);
+  background: var(--bg-dark);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  z-index: 5;
+}
+.trend-tooltip strong { font-size: 0.75rem; font-family: var(--font-heading); }
+.trend-tooltip-orders { color: #cbd5e1; font-size: 0.68rem; }
+
+.status-badge { padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; white-space: nowrap; display: inline-block; }
+.status-badge.completed { background: #dcfce7; color: #166534; }
+.status-badge.cancelled { background: #fee2e2; color: #991b1b; }
+.status-badge.booked { background: #fef3c7; color: #92400e; }
+.status-badge.checkedin { background: #dbeafe; color: #1e40af; }
+.status-badge.status-active { background: #dcfce7; color: #166534; }
+.status-badge.status-inactive { background: #f1f5f9; color: #64748b; }
+
+/* ---------- Online Ordering / Channel Integrations (Settings) ---------- */
+.integrations-form { display: flex; flex-direction: column; gap: 14px; margin-top: 12px; }
+.integration-card {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  padding: 14px 16px;
+  background: #fff;
+  box-shadow: var(--shadow-card);
+}
+.integration-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.integration-toggle { display: flex; align-items: center; gap: 8px; font-weight: 600; cursor: pointer; }
+.integration-toggle input { width: 18px; height: 18px; }
+.integration-card .settings-hint { margin-top: 8px; }
+.integration-card .settings-hint a { color: var(--primary, #b91c47); }
+.whatsapp-template-textarea {
+  display: block;
+  width: 100%;
+  min-height: 150px;
+  margin-top: 6px;
+  box-sizing: border-box;
+  resize: vertical;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+.whatsapp-template-editor {
+  margin-top: 16px;
+}
+.whatsapp-template-editor-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.whatsapp-placeholder-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.whatsapp-placeholder-chip {
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  padding: 3px 8px;
+  background: #f8fafc;
+  color: var(--primary, #b91c47);
+  font: inherit;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+.whatsapp-placeholder-chip:hover {
+  background: #fce7f3;
+}
+.whatsapp-provider-card { margin-bottom: 14px; }
+.whatsapp-trigger-card,
+.whatsapp-template-card { margin-top: 14px; }
+.whatsapp-trigger-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.whatsapp-trigger-option {
+  display: flex;
+  flex-direction: row !important;
+  align-items: flex-start !important;
+  gap: 10px !important;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--border-soft);
+  border-radius: 9px;
+  background: #fff;
+  cursor: pointer;
+}
+.whatsapp-trigger-option > input {
+  flex: 0 0 18px;
+  width: 18px !important;
+  min-height: 18px !important;
+  margin: 2px 0 0;
+  accent-color: var(--accent);
+}
+.whatsapp-trigger-option-copy { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.whatsapp-trigger-option-copy strong { color: var(--text-heading); font-size: .85rem; }
+.whatsapp-trigger-option-copy > span { color: var(--text-muted); font-size: .76rem; font-weight: 450; line-height: 1.45; }
+.whatsapp-handoff-notice {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 0 0 12px;
+  padding: 11px 13px;
+  border: 1px solid #a7f3d0;
+  border-radius: 9px;
+  background: #f0fdf4;
+  color: #166534;
+  font-size: .82rem;
+  line-height: 1.45;
+}
+.whatsapp-handoff-notice strong { font-size: .84rem; }
+.whatsapp-handoff-notice span { color: #365b45; }
+.whatsapp-template-card > .settings-hint { margin: 0 0 10px; }
+.whatsapp-template-card .whatsapp-template-editor { margin-top: 12px; }
+.whatsapp-template-card .whatsapp-template-editor + .whatsapp-template-editor { padding-top: 12px; border-top: 1px solid var(--border-soft); }
+.whatsapp-template-card .whatsapp-template-textarea { margin-top: 8px; }
+.whatsapp-review-link { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+.whatsapp-test-form { max-width: 420px; margin-top: 14px; }
+.whatsapp-settings-error { margin: 10px 0 0; color: #b91c1c; font-size: .82rem; }
+.whatsapp-provider-error { margin: 6px 0 0; color: #b91c1c; }
+.whatsapp-festival-heading { margin: 22px 0 6px; }
+.whatsapp-festival-form { max-width: 420px; margin-top: 12px; }
+
+/* ---------- Backup & Data Continuity (Settings) ---------- */
+.backup-folder-row {
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 10px 0;
+  padding: 10px 12px;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 8px;
+  background: #fff;
+}
+.backup-folder-row code { word-break: break-all; }
+.backup-checkbox-row { display: flex; align-items: center; gap: 8px; font-weight: 600; cursor: pointer; margin: 10px 0; }
+.backup-checkbox-row input { width: 18px; height: 18px; }
+
+.recovery-code-box {
+  font-family: monospace;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-align: center;
+  background: #fff7ed;
+  border: 2px dashed #f59e0b;
+  border-radius: 10px;
+  padding: 18px 12px;
+  margin: 16px 0;
+  color: #92400e;
+}
+
+/* ---------- Room Booking ---------- */
+.room-availability-page { display: flex; flex-direction: column; gap: 16px; }
+.room-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+  padding: 16px;
+}
+.room-card {
+  border: 1px solid var(--border, #2a2f45);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--surface-2, rgba(255,255,255,0.03));
+  min-height: 190px;
+}
+.room-card.unavailable { opacity: 0.6; }
+.room-card-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.room-number { font-weight: 700; font-family: var(--font-heading); }
+.room-card-type { font-size: 0.82rem; color: var(--text-dim, #94a3b8); }
+.room-card-price { font-weight: 600; }
+/* Reserves the guest/maintenance info space so cards with vs. without that
+   text still line up to the same height, keeping the "Book" button in the
+   same spot on every card regardless of how much text is above it. */
+.room-card-info { flex: 1; min-height: 34px; }
+.room-card > .btn { margin-top: auto; }
+
+/* ---------- Room Status Board (front-desk "today" view) ---------- */
+.room-status-legend { display: flex; gap: 8px; flex-wrap: wrap; }
+.room-status-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.room-status-legend-icon { font-size: 0.7rem; }
+.room-status-legend-count {
+  background: rgba(0,0,0,0.12);
+  border-radius: 999px;
+  padding: 0 7px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.room-status-legend-item.room-status-available { background: #dcfce7; color: #166534; }
+.room-status-legend-item.room-status-reserved { background: #dbeafe; color: #1e40af; }
+.room-status-legend-item.room-status-occupied { background: #fee2e2; color: #991b1b; }
+.room-status-legend-item.room-status-maintenance { background: #fef9c3; color: #854d0e; }
+.room-status-card { border-left: 4px solid transparent; }
+.room-status-card.room-status-available { border-left-color: #22c55e; }
+.room-status-card.room-status-reserved { border-left-color: #3b82f6; }
+.room-status-card.room-status-occupied { border-left-color: #ef4444; }
+.room-status-card.room-status-maintenance { border-left-color: #eab308; }
+.status-badge.room-status-available { background: #dcfce7; color: #166534; }
+.status-badge.room-status-reserved { background: #dbeafe; color: #1e40af; }
+.status-badge.room-status-occupied { background: #fee2e2; color: #991b1b; }
+.status-badge.room-status-maintenance { background: #fef9c3; color: #854d0e; }
+.room-status-guest { font-size: 0.85rem; margin-top: 4px; }
+.room-status-guest.dim { color: var(--text-dim, #94a3b8); }
+.room-status-checkin { font-size: 0.75rem; color: var(--text-dim, #94a3b8); margin-top: 2px; }
+
+/* ---------- Booking Calendar (tape-chart view — rooms × days) ---------- */
+@keyframes roomCalFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.room-calendar-card { padding-bottom: 4px; position: relative; padding-top: 44px; }
+.room-calendar-nav { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.room-cal-nav-group {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+  height: 34px;
+}
+.room-cal-nav-btn {
+  border: none;
+  border-right: 1px solid var(--border);
+  background: #fff;
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0 14px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.room-cal-nav-btn:last-child { border-right: none; }
+.room-cal-nav-btn:hover { background: #f1f1f4; }
+.room-cal-nav-btn:active { background: #e2e8f0; }
+.room-cal-nav-today { padding: 0 16px; }
+.room-calendar-range { font-size: 0.85rem; font-weight: 700; color: var(--text); white-space: nowrap; min-width: 150px; text-align: center; transition: opacity 0.2s; }
+/* Circular "+" FAB, pinned top-left above the calendar header — absolutely
+   positioned (out of normal flow) so expanding into the "New Booking" pill
+   on hover NEVER shifts/reflows the "Booking Calendar" title or toolbar
+   next to it. Extra top padding on .room-calendar-card above reserves room
+   for it so it doesn't overlap the title. */
+.room-cal-fab {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  height: 34px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #e11d48, #f43f5e);
+  color: #fff;
+  cursor: pointer;
+  overflow: hidden;
+  padding: 0;
+  width: 34px;
+  max-width: 34px;
+  box-shadow: 0 2px 8px rgba(225,29,72,0.35);
+  transition: max-width 0.25s ease, width 0.25s ease, padding 0.25s ease, box-shadow 0.15s ease;
+  flex-shrink: 0;
+}
+.room-cal-fab-icon { font-size: 1.15rem; font-weight: 700; flex: 0 0 34px; display: flex; align-items: center; justify-content: center; }
+.room-cal-fab-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease 0.05s;
+  padding-right: 0;
+}
+.room-cal-fab:hover, .room-cal-fab:focus-visible {
+  max-width: 220px;
+  width: auto;
+  padding-right: 16px;
+  box-shadow: 0 4px 12px rgba(225,29,72,0.45);
+}
+.room-cal-fab:hover .room-cal-fab-label, .room-cal-fab:focus-visible .room-cal-fab-label { opacity: 1; }
+@media (max-width: 640px) {
+  /* No hover on touch — always show the expanded pill so the action is
+     discoverable without a hover gesture that doesn't exist on phones. */
+  .room-cal-fab { max-width: 220px; width: auto; padding-right: 16px; }
+  .room-cal-fab-label { opacity: 1; }
+}
+.room-cal-tip { padding: 0 16px; margin: 0 0 8px; color: var(--text-muted); font-size: 0.78rem; }
+.room-cal-legend { display: flex; gap: 14px; flex-wrap: wrap; padding: 0 16px 10px; font-size: 0.78rem; color: var(--text-muted); }
+.room-cal-legend-item { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.room-cal-status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; background: #94a3b8; }
+.room-cal-status-dot.reserved { background: #6366f1; }
+.room-cal-status-dot.checked-in { background: #10b981; }
+.room-cal-status-dot.checked-out { background: #f9a8d4; }
+.room-cal-status-dot.free { background: #dcfce7; border: 1px solid #86efac; }
+.room-cal-status-dot.maintenance { background: #facc15; }
+
+/* ---------- Operational dashboard ---------- */
+.dashboard-page { max-width: 1180px; margin: 0 auto; padding: 8px 0 28px; }
+.dashboard-welcome { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+.dashboard-eyebrow { margin: 0 0 4px; color: var(--text-muted); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+.dashboard-welcome h2 { margin: 0; font-size: 1.45rem; color: var(--text-main); }
+.dashboard-date { margin: 4px 0 0; color: var(--text-muted); font-size: 0.86rem; }
+.dashboard-refresh { white-space: nowrap; }
+.dashboard-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+.dashboard-action { border: 1px solid var(--border, #e2e8f0); background: #fff; color: var(--text-main); border-radius: 9px; padding: 10px 15px; font-weight: 700; cursor: pointer; }
+.dashboard-action:hover { border-color: #94a3b8; background: #f8fafc; }
+.dashboard-action.primary { border-color: #4f46e5; background: #4f46e5; color: #fff; }
+.dashboard-action.primary:hover { background: #4338ca; }
+.dashboard-metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.dashboard-metric { min-height: 108px; padding: 16px; background: #fff; border: 1px solid var(--border, #e2e8f0); border-radius: 12px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04); }
+.dashboard-metric span, .dashboard-metric small { display: block; color: var(--text-muted); }
+.dashboard-metric span { font-size: 0.78rem; font-weight: 700; }
+.dashboard-metric strong { display: block; margin: 8px 0 4px; color: var(--text-main); font-size: 1.45rem; }
+.dashboard-metric small { font-size: 0.75rem; }
+.dashboard-section { margin-top: 18px; padding: 16px; background: #fff; border: 1px solid var(--border, #e2e8f0); border-radius: 12px; }
+.dashboard-section-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.dashboard-section-heading h3 { margin: 0; font-size: 1rem; }
+.dashboard-booking-list {
+  display: grid;
+  gap: 8px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding-right: 4px;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.dashboard-booking-list::-webkit-scrollbar { width: 6px; }
+.dashboard-booking-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
+.dashboard-booking-list::-webkit-scrollbar-track { background: transparent; }
+.dashboard-booking-row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 8px; border: 0; border-radius: 8px; background: #f8fafc; text-align: left; cursor: pointer; }
+.dashboard-booking-row:hover { background: #f1f5f9; }
+.dashboard-booking-room { display: grid; place-items: center; width: 42px; height: 34px; border-radius: 7px; background: #e0e7ff; color: #3730a3; font-weight: 800; }
+.dashboard-booking-main { min-width: 0; flex: 1; }
+.dashboard-booking-main strong, .dashboard-booking-main small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dashboard-booking-main small { margin-top: 2px; color: var(--text-muted); font-size: 0.75rem; }
+.dashboard-status { padding: 4px 8px; border-radius: 999px; background: #e2e8f0; color: #475569; font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
+.dashboard-status.booked { background: #dbeafe; color: #1d4ed8; }
+.dashboard-status.checked_in { background: #dcfce7; color: #15803d; }
+.dashboard-empty, .dashboard-loading { padding: 22px 8px; color: var(--text-muted); text-align: center; }
+.dashboard-error { margin-bottom: 14px; padding: 10px 12px; border: 1px solid #fecaca; border-radius: 8px; background: #fef2f2; color: #b91c1c; font-size: 0.85rem; }
+@media (max-width: 800px) {
+  .dashboard-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 520px) {
+  .dashboard-welcome { align-items: stretch; flex-direction: column; }
+  .dashboard-refresh { align-self: flex-start; }
+  .dashboard-metrics { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .dashboard-metric { min-height: 96px; padding: 12px; }
+  .dashboard-metric strong { font-size: 1.2rem; }
+  .dashboard-booking-row { gap: 8px; }
+  .dashboard-status { display: none; }
+  .dashboard-booking-list { max-height: 300px; }
+}
+.room-cal-swatch { width: 13px; height: 13px; border-radius: 4px; display: inline-block; }
+.room-cal-swatch-reserved { background: linear-gradient(135deg, #6366f1, #818cf8); }
+.room-cal-swatch-occupied { background: linear-gradient(135deg, #ef4444, #f87171); }
+.room-cal-swatch-free { background: #f0fdf4; border: 1px dashed #86efac; }
+.room-cal-swatch-maintenance { background: repeating-linear-gradient(45deg, #fef9c3, #fef9c3 4px, #fef3c7 4px, #fef3c7 8px); border: 1px solid #fbbf24; }
+.room-cal-swatch-checked-out { background: linear-gradient(135deg, #fce7f3, #fbcfe8); border: 1px solid #f9a8d4; }
+/* Split into two independent panes: a frozen (non-scrolling) room-label
+   column on the left, and a horizontally-scrolling days pane on the right.
+   Kept as two separate scroll contexts (not one row with a `position:
+   sticky` label cell) — a sticky-in-flex-row column was tried first but
+   caused some mobile browsers' scrollable pane to stop short partway
+   through the window instead of reaching the true end of the range. Two
+   fully independent panes can't suffer that class of bug. */
+.room-cal-split {
+  display: flex;
+  padding: 0 16px 16px;
+  max-width: 100%;
+  /* Let the app's main .content scroller handle vertical movement. A
+     nested max-height scroller made the room labels stop after about nine
+     rows on touch devices, while the date pane appeared to scroll alone. */
+  overflow: visible;
+}
+.room-cal-frozen-col {
+  flex-shrink: 0;
+  width: 130px;
+  border: 1px solid var(--border);
+  border-right: none;
+  border-radius: 12px 0 0 12px;
+  background: #fff;
+  overflow: hidden;
+}
+.room-cal-frozen-row {
+  height: 46px;
+  min-height: 46px;
+  box-sizing: border-box;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-bottom: 1px solid #eef0f4;
+  color: #111827;
+  overflow: hidden;
+}
+.room-cal-frozen-row:last-child { border-bottom: none; }
+.room-cal-frozen-row.room-cal-row-alt { background: #fbfbfe; }
+.room-cal-frozen-header {
+  min-height: 44px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  z-index: 2;
+}
+.room-cal-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  flex: 1;
+  min-width: 0;
+}
+.room-cal-table {
+  min-width: 100%;
+  width: max-content;
+  border: 1px solid var(--border);
+  border-left: none;
+  border-radius: 0 12px 12px 0;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  animation: roomCalFadeIn 0.25s ease-out;
+}
+.room-cal-row { display: flex; border-bottom: 1px solid #eef0f4; height: 46px; min-height: 46px; }
+.room-cal-row:last-child { border-bottom: none; }
+.room-cal-row.room-cal-row-alt { background: #fbfbfe; }
+.room-cal-row:not(.room-cal-header-row):hover { background: #f5f7ff; }
+.room-cal-header-row { min-height: 44px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: linear-gradient(180deg, #ffffff, #f8fafc); z-index: 2; }
+.room-cal-corner { font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.room-cal-room-number { font-weight: 700; font-size: 0.85rem; color: #111827; }
+.room-cal-room-type { font-size: 0.72rem; color: var(--text-muted); }
+.room-cal-days-grid { display: grid; flex: 1; position: relative; min-height: 46px; }
+.room-cal-bars-layer { position: absolute; inset: 0; pointer-events: none; }
+.room-cal-day-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  padding: 7px 0;
+  border-right: 1px solid #f1f1f4;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+.room-cal-day-header.is-weekend { color: #dc2626; }
+.room-cal-day-header.is-today { background: linear-gradient(180deg, #fecaca, #fca5a5); color: #7f1d1d; font-weight: 700; }
+.room-cal-day-num { font-size: 0.85rem; font-weight: 700; }
+.room-cal-day-cell { grid-row: 1; border-right: 1px solid #f1f1f4; transition: background 0.15s; }
+.room-cal-day-cell.is-weekend { background: #fefaf3; }
+.room-cal-day-cell.is-today { background: #fff5f5; }
+.room-cal-day-cell.is-free { cursor: pointer; }
+.room-cal-day-cell.is-free:hover { background: #ecfdf3 !important; box-shadow: inset 0 0 0 1px #86efac; }
+.room-cal-day-cell.is-maintenance {
+  cursor: not-allowed;
+  background: repeating-linear-gradient(45deg, #fef9c3, #fef9c3 6px, #fef3c7 6px, #fef3c7 12px) !important;
+}
+.room-cal-bar {
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  padding: 5px 16px;
+  border-radius: 3px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #fff;
+  z-index: 2;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.14);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  pointer-events: auto;
+}
+.room-cal-bar-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 4px; }
+.room-cal-bar:hover { transform: translateY(-1px) scale(1.02); box-shadow: 0 4px 10px rgba(0,0,0,0.22); z-index: 3; }
+.room-cal-bar-occupied { outline: 2px solid rgba(255,255,255,0.55); outline-offset: -3px; }
+.room-cal-bar-checked-out { color: #9d174d; box-shadow: 0 1px 3px rgba(157,23,77,0.18); }
+/* Group booking (2+ rooms under one booking_group_id): a distinct dashed
+   gold border so linked rooms are visually identifiable at a glance across
+   different room rows, plus a small 👥 count badge in the bar label. */
+.room-cal-bar-grouped { border: 2px dashed #fde047; box-shadow: 0 0 0 1px rgba(253,224,71,0.5), 0 1px 4px rgba(0,0,0,0.14); }
+.room-cal-group-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.66rem;
+  font-weight: 800;
+  background: #fde047;
+  color: #713f12;
+  border-radius: 999px;
+  padding: 1px 5px;
+  line-height: 1.3;
+  flex-shrink: 0;
+}
+@media (max-width: 640px) {
+  .room-cal-frozen-col { width: 96px; }
+}
+@media (max-width: 1024px) {
+  .room-cal-day-header {
+    min-width: 58px;
+    padding-left: 4px;
+    padding-right: 4px;
+    font-size: .78rem;
+  }
+  .room-cal-day-num { font-size: .95rem; }
+}
+.room-cal-group-banner {
+  margin: 10px 14px 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fefce8;
+  border: 1px dashed #fde047;
+}
+.room-cal-group-banner-title { display: block; font-size: 0.8rem; font-weight: 700; color: #713f12; margin-bottom: 6px; }
+.room-cal-group-banner-list { display: flex; flex-direction: column; gap: 4px; }
+.room-cal-group-banner-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.78rem;
+  padding: 4px 0;
+}
+.room-cal-group-banner-row.is-current { font-weight: 700; }
+.room-cal-group-banner-room { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.room-cal-group-banner-amount {
+  font-weight: 700;
+  color: #854d0e;
+  background: #fde68a;
+  border-radius: 6px;
+  padding: 2px 8px;
+  white-space: nowrap;
+  text-align: right;
+  min-width: 78px;
+}
+.room-cal-search-bar { margin-top: 14px; }
+.room-cal-search-results {
+  margin-top: 8px;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 10px;
+  overflow: hidden;
+  max-width: 620px;
+  box-shadow: 0 2px 6px rgba(15,23,42,0.06);
+}
+.room-cal-search-result-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  border: none;
+  border-bottom: 1px solid var(--border, #e2e8f0);
+  background: var(--surface, #fff);
+  cursor: pointer;
+  font-size: 0.82rem;
+  text-align: left;
+}
+.room-cal-search-result-row:last-child { border-bottom: none; }
+.room-cal-search-result-row:hover { background: var(--surface-hover, #f8fafc); }
+.room-cal-search-result-main { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Booking detail panel — shown directly below the calendar when a booking
+   bar is clicked, so staff can view/act on a booking without leaving the
+   calendar. */
+.room-cal-detail-panel {
+  margin: 0 16px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  background: #fafafc;
+  animation: room-cal-detail-in 0.15s ease;
+}
+@keyframes room-cal-detail-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+.room-cal-detail-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.room-cal-detail-header h4 { margin: 0; font-size: 1rem; }
+.room-cal-detail-header .modal-close { position: static; font-size: 1rem; }
+.room-cal-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px 20px;
+  margin-bottom: 12px;
+}
+.room-cal-detail-grid > div { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; font-size: 0.9rem; }
+.room-cal-detail-grid .dim { font-size: 0.75rem; }
+.room-cal-detail-actions { flex-wrap: wrap; }
+.room-cal-detail-inline-form { display: flex; flex-direction: column; gap: 10px; max-width: 320px; }
+.room-cal-detail-inline-form label { display: flex; flex-direction: column; gap: 4px; font-size: 0.85rem; color: #374151; }
+.room-row-nights {
+  align-self: center;
+  color: var(--text-muted, #64748b);
+  font-size: .78rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* "▸ N rooms" expand toggle + the per-room sub-rows it reveals, in the
+   Calendar's Booking Details panel — mirrors the same affordance already
+   used for group bookings in the Bookings tab table. */
+.room-cal-group-toggle { margin-bottom: 10px; }
+.room-cal-detail-subrows {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.room-cal-detail-subrow {
+  display: grid;
+  grid-template-columns: 1.1fr 0.8fr 0.9fr 0.9fr 1fr 0.9fr 1.2fr 0.7fr;
+  gap: 8px;
+  padding: 8px 10px;
+  font-size: 0.82rem;
+  align-items: center;
+  border-bottom: 1px solid #eef0f4;
+}
+.room-cal-detail-subrow:last-child { border-bottom: none; }
+.room-cal-detail-subrow-header { background: #f8fafc; font-weight: 700; color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; }
+.room-cal-detail-subrow.is-current { background: #eef2ff; }
+@media (max-width: 640px) {
+  .room-cal-detail-subrow { grid-template-columns: 1fr 1fr; grid-auto-rows: auto; }
+  .room-cal-detail-subrow-header { display: none; }
+}
+
+.booking-addons-editor { grid-column: 1 / -1; border-top: 1px solid var(--border, #2a2f45); padding-top: 12px; margin-top: 4px; display: flex; flex-direction: column; gap: 8px; }
+.booking-contacts-editor, .booking-rooms-editor, .booking-advance-editor {
+  border-top: 1px solid var(--border, #2a2f45);
+  padding-top: 12px;
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.contact-row, .room-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border, #2a2f45);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+.contact-row-main, .contact-row-extra { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.contact-row-main input { flex: 1; min-width: 120px; }
+.contact-row-extra input { flex: 1; min-width: 140px; }
+.room-row { flex-direction: row; align-items: center; flex-wrap: wrap; }
+.room-row select { flex: 2; min-width: 180px; }
+.room-row input { flex: 1; min-width: 90px; }
+.room-row-remove-spacer { visibility: hidden; }
+/* Qualified with the ancestor form class (matching `.fm-form label`'s
+   specificity) — otherwise the generic "stack label text above its input"
+   rule for all form labels (.fm-form label { flex-direction: column }) wins
+   over the plain single-class selector below and forces the checkbox onto
+   its own line above the "Change Dates" text instead of sitting inline
+   with it, left-aligned on one row. */
+.fm-form .room-row-own-dates-toggle {
+  flex: 0 0 auto;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--text-dim, #9ca3af);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.room-row-own-dates-toggle input { flex: 0 0 auto; min-width: 0; width: 14px; height: 14px; margin: 0; }
+.room-row-own-dates {
+  flex-basis: 100%;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 6px 8px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 6px;
+}
+.room-row-own-dates label {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 0.8rem;
+  flex: 1;
+  min-width: 160px;
+}
+.booking-rooms-editor > .btn-secondary { align-self: flex-start; }
+@media (max-width: 640px) {
+  /* Force every room row to stack vertically so nothing (select, rate,
+     guests, remove, change-dates toggle) can be squeezed off-screen or
+     clipped by the modal's overflow-x:hidden on narrow phones — this was
+     making "+ Add Room" effectively invisible/unreachable on mobile. */
+  .room-row { flex-direction: column; align-items: stretch; }
+  .room-row select, .room-row input { min-width: 0; width: 100%; }
+  .room-row-own-dates-toggle { width: 100%; }
+  .room-row-own-dates label { min-width: 0; width: 100%; }
+  .booking-rooms-editor > .btn-secondary { align-self: stretch; width: 100%; margin-top: 6px; }
+}
+.advance-payment-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.advance-payment-row label { flex: 1; min-width: 160px; }
+.addon-add-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.addon-add-row input { flex: 1; }
+.addon-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 4px; }
+.addon-list li { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; padding: 4px 8px; background: rgba(255,255,255,0.03); border-radius: 6px; }
+.form-error { grid-column: 1 / -1; color: #f87171; font-size: 0.85rem; }
+.dim { color: var(--text-dim, #94a3b8); font-size: 0.8rem; }
+/* Small "?" hint icon (InfoTip component) — sits inline next to a label
+   that may need a one-line explanation (abbreviations, combined/group
+   totals, business terms), instead of the app being cluttered with a full
+   sentence beside every field. Tap/hover/focus shows the native tooltip. */
+.info-tip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  min-width: 15px;
+  border-radius: 50%;
+  background: var(--surface-hover, #eef2ff);
+  color: var(--accent-dark, #4338ca);
+  border: 1px solid rgba(67,56,202,0.25);
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: help;
+  margin-left: 5px;
+  vertical-align: middle;
+}
+.info-tip:hover, .info-tip:focus { background: rgba(67,56,202,0.15); outline: none; }
+.field-hint { display: block; font-size: 0.78rem; margin-top: 4px; font-weight: 400; }
+.field-hint.danger { color: var(--danger, #ef4444); }
+.id-upload-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.booking-total-preview {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border, #2a2f45);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+}
+.booking-total-preview strong { font-size: 1rem; margin-top: 4px; font-family: var(--font-heading); }
+
+/* ---------- Settings ---------- */
+.settings-page {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.settings-hero {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 26px;
+  border-radius: 18px;
+  color: #fff;
+  background: linear-gradient(120deg, #17324d 0%, #225b70 55%, #0f766e 100%);
+  box-shadow: 0 14px 30px rgba(15, 59, 74, 0.2);
+}
+.settings-hero-icon {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  background: rgba(255,255,255,.16);
+  font-size: 1.65rem;
+}
+.settings-hero h1 { margin: 2px 0 3px; color: #fff; font-size: 1.75rem; }
+.settings-hero p { margin: 0; color: rgba(255,255,255,.78); font-size: .9rem; }
+.settings-eyebrow { display: block; color: #0f766e; font-size: .68rem; font-weight: 800; letter-spacing: .12em; }
+.settings-hero .settings-eyebrow { color: #a7f3d0; }
+.settings-quick-nav {
+  position: sticky;
+  top: 8px;
+  z-index: 3;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 14px 0 18px;
+  padding: 8px;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background: rgba(255,255,255,.94);
+  box-shadow: 0 5px 18px rgba(15,23,42,.07);
+  backdrop-filter: blur(8px);
+}
+.settings-quick-nav a {
+  padding: 8px 12px;
+  border-radius: 9px;
+  color: var(--text-strong, #334155);
+  font-size: .78rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+.settings-quick-nav a:hover { color: #0f766e; background: #ecfdf5; }
+.settings-anchor { display: block; scroll-margin-top: 72px; }
+.settings-anchor-section { scroll-margin-top: 72px; }
+.settings-sub { color: var(--text-muted); font-size: 0.88rem; }
+.settings-page,
+.settings-page * { box-sizing: border-box; }
+.settings-page h2,
+.settings-page h3,
+.settings-page h4 { margin-top: 0; color: var(--text-heading, #1e293b); }
+.settings-page h2 { margin-bottom: 8px; font-size: 1.12rem; line-height: 1.3; }
+.settings-page h3 { margin-bottom: 7px; font-size: 1rem; line-height: 1.35; }
+.settings-page p { line-height: 1.5; }
+.setup-wizard-card h2 { margin-bottom: 4px; }
+.settings-optional-tag {
+  display: inline-block;
+  color: #92400e;
+  background: #fef3c7;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin: 0 0 8px;
+}
+.settings-form { display: flex; flex-direction: column; gap: 12px; }
+.settings-row { display: flex; align-items: flex-start; gap: 16px; }
+.settings-row > label { flex: 1 1 0; min-width: 0; }
+.settings-section label,
+.settings-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  font-size: 0.82rem;
+  font-weight: 650;
+  line-height: 1.3;
+  color: #475569;
+}
+.settings-section input:not([type="checkbox"]):not([type="radio"]),
+.settings-section select,
+.settings-section textarea,
+.settings-form input:not([type="checkbox"]):not([type="radio"]),
+.settings-form select,
+.settings-form textarea {
+  width: 100%;
+  min-height: 40px;
+  padding: 9px 11px;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  background: #fff;
+  color: #1e293b;
+  font: inherit;
+  font-weight: 450;
+  line-height: 1.35;
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.settings-section textarea,
+.settings-form textarea { min-height: 76px; resize: vertical; }
+.settings-section input:not([type="checkbox"]):not([type="radio"]):focus,
+.settings-section select:focus,
+.settings-section textarea:focus,
+.settings-form input:not([type="checkbox"]):not([type="radio"]):focus,
+.settings-form select:focus,
+.settings-form textarea:focus {
+  border-color: #0f766e;
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, .13);
+}
+.settings-group { margin-bottom: 4px; }
+.settings-group-label { display: block; margin-bottom: 8px; color: #334155; font-size: 0.78rem; font-weight: 800; letter-spacing: .02em; text-transform: uppercase; }
+.settings-group .settings-row { margin-bottom: 0; }
+.settings-intro { background: #fff1f2; border: 1px solid #fecdd3; padding: 10px 12px; border-radius: 8px; font-size: 0.85rem; }
+/* Food/Restaurant vs Hotel/Room Booking business-identity groups within the
+   business-details form (Settings + first-run Setup Wizard). When BOTH
+   modules are licensed, `.settings-section-picker` lets the user switch
+   which one is shown/edited instead of stacking both fieldsets at once;
+   single-module licenses just show their one section directly. */
+.settings-section-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-strong, #1f2937);
+}
+.settings-section-picker select {
+  font-family: var(--font-heading, inherit);
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 10px 12px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  background: #fff;
+  color: var(--text-strong, #1f2937);
+}
+/* Dual-edit mode (both Food + Room modules licensed, regular Settings
+   screen): each business profile is its own expandable/collapsible section
+   with its own Save button, instead of a single dropdown-switch + shared
+   Save — see SettingsForm.jsx's dualEditMode. */
+.settings-section-toggle {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-heading, inherit);
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 12px 14px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  background: #f8fafc;
+  color: var(--text-strong, #1f2937);
+  cursor: pointer;
+  margin-top: 8px;
+}
+.settings-section-toggle:hover { background: #f1f5f9; }
+.settings-fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin: 0;
+}
+.settings-fieldset + .settings-fieldset { margin-top: 4px; }
+/* Hotel logo picker (Room/Hotel business profile) — preview + choose/remove
+   buttons in a row, reusing the generic FoodImage preview component. */
+.settings-logo-row { display: flex; align-items: center; gap: 12px; }
+.settings-fieldset legend {
+  font-family: var(--font-heading, inherit);
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0 6px;
+  color: var(--text-strong, #1f2937);
+}
+/* Small inline button-groups within a section (Open Records folders, Save
+   Recovery Email, etc.) — NOT a section wrapper itself. Previously this
+   class was also being reused as several sections' outer wrapper, which
+   silently gave them this flex-row layout instead of the plain stacked
+   card every other section got — one of several causes of inconsistent
+   spacing across Settings. See `.settings-section` below for the actual
+   section-card styling now used consistently everywhere. */
+.settings-extra { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+
+/* Cloud API has two different groups of controls. Keep each label/input pair
+   together and give the fields a predictable width instead of relying on the
+   generic wrapping Settings layout. */
+.whatsapp-cloud-settings {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(150px, .42fr);
+  align-items: start;
+  gap: 12px 14px;
+  min-width: 0;
+}
+.whatsapp-cloud-settings > label {
+  min-width: 0;
+}
+.whatsapp-cloud-settings > .settings-hint,
+.whatsapp-cloud-settings > .help-panel {
+  grid-column: 1 / -1;
+  min-width: 0;
+  margin: 0;
+}
+.whatsapp-cloud-settings .help-panel {
+  overflow: hidden;
+}
+.whatsapp-trigger-grid { grid-template-columns: 1fr; }
+.whatsapp-cloud-settings .help-panel p,
+.whatsapp-cloud-settings .help-panel strong {
+  overflow-wrap: anywhere;
+}
+.whatsapp-cloud-settings .settings-code {
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto;
+  overflow-wrap: anywhere;
+}
+.whatsapp-cloud-credentials {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, .7fr);
+  align-items: end;
+  gap: 10px;
+}
+.whatsapp-cloud-credentials > input {
+  min-width: 0;
+}
+.whatsapp-cloud-credentials > .btn {
+  align-self: end;
+}
+.whatsapp-cloud-credentials > .settings-hint {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+/* Every Settings section (Hotel Settings, Staff Access, Features, Connect to
+   a Counter, PIN & Recovery, Backup, Integrations) shares this one card
+   look + one consistent gap between sections, instead of each section
+   picking its own one-off margin (16/24/28px) and sometimes a border/
+   background and sometimes not — which is what made the page look
+   inconsistent from section to section. */
+.settings-section {
+  background: white;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  padding: 22px;
+  margin-top: 0;
+  box-shadow: var(--shadow-card);
+}
+.settings-section > .settings-sub:first-of-type { margin-top: 0; margin-bottom: 16px; }
+.settings-section > .settings-row { margin-top: 16px; }
+.settings-section > .settings-extra { align-items: center; }
+.settings-section .form-error { margin: 12px 0; }
+.settings-section .btn { min-height: 38px; }
+.settings-error-boundary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+.settings-error-boundary code {
+  max-width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  background: #fff1f2;
+  color: #9f1239;
+  overflow-wrap: anywhere;
+}
+.settings-section .checkbox-label,
+.settings-section .radio-label,
+.settings-section .integration-toggle {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+.settings-section .checkbox-label input,
+.settings-section .radio-label input,
+.settings-section .integration-toggle input { width: auto; min-height: 0; }
+.settings-section:first-child { margin-top: 0; padding-top: 22px; border-top: 1px solid var(--border-soft); }
+.settings-page > .settings-section,
+.settings-page > .settings-anchor-section,
+.settings-page > .settings-anchor-section > .settings-section { width: 100%; }
+.settings-anchor-section { margin: 0; }
+
+/* ---------- License Info Section (Settings > License) ---------- */
+.license-info-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.license-info-row { display: flex; align-items: baseline; gap: 12px; font-size: 0.88rem; }
+.license-info-label { min-width: 130px; font-weight: 600; color: var(--text-muted); flex-shrink: 0; }
+.license-info-value { color: var(--text-heading, #1e293b); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.license-info-machineid { font-family: 'Consolas', monospace; font-size: 0.78rem; word-break: break-all; color: var(--text-muted); }
+.license-info-no-payload { color: var(--text-muted); font-size: 0.88rem; margin: 8px 0 0; }
+.license-module-badge {
+  display: inline-block; background: #ecfdf5; color: #059669;
+  font-size: 0.75rem; font-weight: 600; padding: 2px 9px; border-radius: 20px;
+}
+.license-expiry-badge {
+  display: inline-block; font-size: 0.75rem; font-weight: 700;
+  padding: 2px 9px; border-radius: 20px;
+}
+.license-expiry-perpetual { background: #eff6ff; color: #2563eb; }
+.license-expiry-green    { background: #ecfdf5; color: #15803d; }
+.license-expiry-yellow   { background: #fef9c3; color: #a16207; }
+.license-expiry-red      { background: #fee2e2; color: #b91c1c; }
+.license-expiry-grace    { background: #fef3c7; color: #92400e; }
+.license-expiry-expired  { background: #fee2e2; color: #b91c1c; }
+
+/* WhatsApp integration (Settings > WhatsApp): QR pairing image, per-message
+   send-history rows, and the festival-greeting card list. */
+.whatsapp-qr-wrap { text-align: center; margin-top: 10px; }
+.whatsapp-qr-wrap img { border: 1px solid var(--border); border-radius: 8px; padding: 8px; background: white; }
+.whatsapp-send-log { margin-top: 10px; max-height: 220px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; }
+.whatsapp-log-row { display: grid; grid-template-columns: 1.4fr 1fr 0.8fr 0.8fr; gap: 8px; padding: 6px 10px; font-size: 0.8rem; border-bottom: 1px solid var(--border); }
+.whatsapp-log-row:last-child { border-bottom: none; }
+.festival-list { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+
+
+.setup-wizard-overlay {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(160deg, #101f2e 0%, #16344a 55%, #1d4b63 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.setup-wizard-card {
+  position: relative;
+  z-index: 1;
+  background: #fffaf0;
+  border-radius: 16px;
+  padding: 28px 32px;
+  max-width: 560px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 70px rgba(0,0,0,0.35);
+  border-top: 5px solid #f2790a;
+}
+.setup-mode-choices { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+.setup-mode-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  text-align: left;
+  background: #fff;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+.setup-mode-card:hover { border-color: #f2790a; box-shadow: 0 6px 18px rgba(242,121,10,0.15); transform: translateY(-1px); }
+.setup-mode-header { display: flex; align-items: center; gap: 10px; }
+.setup-mode-icon { font-size: 1.6rem; line-height: 1; }
+.setup-mode-title { font-weight: 700; font-size: 1.05rem; }
+.setup-mode-desc { font-size: 0.85rem; color: var(--text-muted, #64748b); line-height: 1.4; }
+.setup-wizard-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.setup-wizard-logo { width: 44px; height: 44px; flex-shrink: 0; }
+.brand-wordmark {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.6rem;
+  letter-spacing: -0.01em;
+}
+.brand-wordmark.small { font-size: 1.3rem; }
+.brand-bill { color: #1f7a3d; }
+.brand-nest { color: #f2790a; }
+.brand-tagline { color: #8a6d3b; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.01em; margin: 2px 0 14px; white-space: nowrap; }
+.brand-tagline.small { margin: 0; font-size: 0.72rem; }
+
+/* ---------- Login screen (PIN lock) ---------- */
+.login-screen {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(160deg, #101f2e 0%, #16344a 55%, #1d4b63 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow: hidden;
+}
+
+/* ---------- Animated login background: Icon Bokeh (final choice) ---------- */
+.login-bg-layer { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+.login-card { position: relative; z-index: 1; }
+
+/* Icon Bokeh — hospitality icons drifting slowly upward. Uses a deep
+   navy/teal backdrop (instead of the brown default) so the colorful emoji
+   icons stay bright and readable instead of blending into a warm brown. */
+.login-screen[data-bg="icons"] {
+  background: linear-gradient(160deg, #101f2e 0%, #16344a 55%, #1d4b63 100%);
+}
+.bg-icon {
+  position: absolute;
+  bottom: -60px;
+  font-size: 2.1rem;
+  opacity: 0.32;
+  filter: drop-shadow(0 0 6px rgba(255,255,255,0.15));
+  animation: bgIconFloat 14s linear infinite;
+}
+@keyframes bgIconFloat {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.38; }
+  90% { opacity: 0.38; }
+  100% { transform: translateY(-115vh) rotate(25deg); opacity: 0; }
+}
+
+.login-card {
+  background: #fffaf0;
+  border-radius: 20px;
+  padding: 32px 30px;
+  max-width: 380px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  border-top: 5px solid #f2790a;
+}
+.login-logo-mark { width: 76px; height: 76px; margin-bottom: 6px; }
+.login-card h2 { margin: 0 0 4px; }
+.login-card .pin-dot.filled { background: #f2790a; border-color: #f2790a; }
+.login-card .btn-primary, .setup-wizard-card .btn-primary {
+  background: #1f7a3d;
+  box-shadow: 0 3px 10px rgba(31,122,61,0.35);
+}
+.login-card .btn-primary:hover:not(:disabled), .setup-wizard-card .btn-primary:hover:not(:disabled) {
+  box-shadow: 0 5px 14px rgba(31,122,61,0.45);
+}
+.pin-dots { display: flex; justify-content: center; gap: 10px; margin: 18px 0; }
+.pin-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: transparent;
+  transition: background 0.15s, border-color 0.15s;
+}
+.pin-dot.filled { background: var(--accent, #e11d48); border-color: var(--accent, #e11d48); }
+.pin-keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 12px 0 18px;
+}
+.pin-keypad button {
+  padding: 14px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #f8fafc;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.pin-keypad button:hover:not(:disabled) { background: #f1f1f4; }
+.pin-keypad button:disabled { opacity: 0.5; cursor: not-allowed; }
+.pin-key-clear, .pin-key-back { font-size: 0.85rem; }
+.login-submit { width: 100%; }
+.forgot-pin-link { display: block; margin: 10px auto 0; text-align: center; }
+.pin-change-form { width: 100%; }
+.pin-fields-row { display: flex; gap: 14px; flex-wrap: wrap; }
+.pin-fields-row label { flex: 1 1 160px; min-width: 140px; }
+.pin-fields-row input { width: 100%; }
+.pin-form-actions-center, .fm-form-actions-center { justify-content: center; }
+@media (max-width: 640px) {
+  .pin-fields-row { flex-direction: column; gap: 14px; }
+  /* The 160px flex-basis above means "preferred width" in the desktop row —
+     but flex-basis always sizes along whichever axis is currently the main
+     one, so once direction flips to column here it was being read as
+     "preferred height" instead, forcing each field into a 160px-tall box
+     and producing exactly the huge gaps between fields on a phone. */
+  .pin-fields-row label { flex: none; min-width: 0; width: 100%; }
+}
+.help-question-btn {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid #94a3b8;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.help-question-btn:hover { background: #e2e8f0; }
+.fm-form label.label-with-help,
+.settings-form label.label-with-help,
+p.settings-sub.label-with-help,
+h3.label-with-help,
+h4.label-with-help {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+.help-panel {
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin: 4px 0 10px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+.help-panel ol { margin: 8px 0 0; padding-left: 20px; }
+.help-panel li { margin-bottom: 6px; }
+.help-panel code { background: #e2e8f0; padding: 1px 5px; border-radius: 4px; }
+.current-user-badge { font-size: 0.85rem; opacity: 0.9; white-space: nowrap; }
+
+.staff-add-form { flex-direction: row !important; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+.staff-add-form label { flex: 1; min-width: 160px; }
+.fm-section-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.fm-section-header h3 { margin-bottom: 4px; }
+.fm-section-header .btn { flex-shrink: 0; white-space: nowrap; }
+
+/* "+ Add Table"/edit form for the Tables page — sits left-aligned right
+   under the heading/description (not floated off to a corner), and lays
+   its fields out in a single horizontal row like Manage Staff's add-form,
+   rather than stacking each one full-width. */
+.table-add-form-anchor { margin: 14px 0 20px; }
+.table-add-form-row {
+  flex-direction: row !important;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+.table-add-form-row label { flex: 1; min-width: 160px; max-width: 220px; }
+.table-add-form-row .table-add-form-capacity { max-width: 110px; min-width: 90px; flex: 0 0 auto; }
+.table-add-form-row .form-error { flex-basis: 100%; }
+
+/* ---------- Bill window (receipt) ---------- */
+.bill-window { padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.receipt { width: var(--receipt-width, 80mm); max-width: 100%; font-family: 'Consolas', monospace; font-size: var(--receipt-scale, 100%); }
+.receipt h2 { text-align: center; margin-bottom: 2px; }
+.receipt-sub, .receipt-title { text-align: center; margin: 2px 0; font-size: 0.85rem; }
+.receipt-title { font-weight: 700; }
+.receipt-meta { display: flex; flex-direction: column; gap: 2px; font-size: 0.8rem; }
+.receipt-table { width: 100%; font-size: 0.8rem; border-collapse: collapse; }
+.receipt-table th, .receipt-table td { text-align: left; padding: 3px 2px; }
+.receipt-totals { display: flex; flex-direction: column; gap: 3px; font-size: 0.85rem; }
+.receipt-totals div { display: flex; justify-content: space-between; }
+.grand-total { font-weight: 700; font-size: 1rem; border-top: 1px solid #000; padding-top: 4px; }
+.receipt-advance-row { color: #0a7a3d; font-weight: 600; }
+.receipt-balance-row { font-weight: 700; border-top: 1px dashed #999; padding-top: 3px; margin-top: 2px; }
+.receipt-footer { text-align: center; font-size: 0.8rem; margin-top: 6px; }
+.receipt-powered-by {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+  font-size: 0.75rem;
+  margin-top: 10px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px dashed #d97706;
+  background: #fff7ed;
+  letter-spacing: 0.02em;
+  color: #92400e;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.receipt-powered-by strong { color: #b45309; }
+.receipt-powered-by-logo { width: 18px; height: 18px; object-fit: contain; border-radius: 4px; flex-shrink: 0; }
+.receipt-actions { display: flex; gap: 10px; }
+.printer-preview-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 16px; }
+.printer-preview-label { font-size: 0.78rem; color: var(--text-muted); }
+.printer-section-heading { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+.printer-status-badge { padding: 7px 10px; border-radius: 999px; color: #047857; background: #ecfdf5; font-size: .75rem; font-weight: 700; white-space: nowrap; }
+.printer-preview-panel { margin-top: 18px; overflow: hidden; border: 1px solid #dbe4ec; border-radius: 14px; background: #f8fafc; }
+.printer-preview-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 14px; border-bottom: 1px solid #e2e8f0; }
+.printer-preview-select { display: flex; align-items: center; gap: 7px; color: #475569; font-size: .72rem; font-weight: 700; white-space: nowrap; }
+.printer-preview-select select { width: auto; min-width: 155px; padding: 7px 28px 7px 9px; font-size: .75rem; }
+.printer-preview-toolbar strong, .printer-preview-toolbar span { display: block; }
+.printer-preview-toolbar strong { color: #1e293b; font-size: .85rem; }
+.printer-preview-toolbar span { margin-top: 2px; color: #64748b; font-size: .72rem; }
+.printer-preview-metrics { display: flex; gap: 6px; }
+.printer-preview-metrics b { padding: 5px 8px; border-radius: 6px; color: #0f766e; background: #ccfbf1; font-size: .7rem; }
+.printer-preview-stage { display: grid; place-items: center; min-height: 300px; padding: 20px; background: repeating-linear-gradient(0deg, #f8fafc, #f8fafc 23px, #f1f5f9 24px); }
+.printer-preview { width: min(100%, calc(260px * var(--paper-ratio))); min-height: 245px; padding: 16px 14px; display: flex; flex-direction: column; gap: 7px; background: #fff; color: #111827; border: 1px solid #cbd5e1; box-shadow: 0 8px 18px rgba(15, 23, 42, 0.16); font-family: Consolas, monospace; font-size: calc(11px * var(--receipt-scale)); overflow-wrap: anywhere; transition: width .2s ease, font-size .2s ease; }
+.printer-preview > * { text-align: center; }
+.printer-preview hr { width: 100%; border: 0; border-top: 1px dashed #111; }
+.printer-preview-logo { align-self: center; display: grid; place-items: center; width: 25px; height: 25px; border-radius: 7px; color: #fff; background: #0f766e; font-family: var(--font-heading); font-weight: 800; }
+.printer-preview-muted { color: #64748b; font-size: .82em; }
+.printer-preview-line { display: flex; justify-content: space-between; gap: 8px; text-align: left; }
+.printer-preview-line span { text-align: left; }
+.printer-preview-line b { white-space: nowrap; }
+.printer-preview-total { padding-top: 2px; font-weight: 700; }
+.printer-driver-status { display: flex; flex-direction: column; gap: 3px; padding: 12px 14px; border-top: 1px solid #e2e8f0; background: #f0fdfa; color: #334155; font-size: .76rem; }
+.printer-driver-status strong { color: #0f766e; font-size: .8rem; }
+.printer-driver-status small { color: #64748b; line-height: 1.45; }
+.printer-preview.room-preview { width: min(100%, 420px); min-height: 350px; padding: 26px 24px; font-family: var(--font-body, Arial, sans-serif); font-size: 10px; text-align: left; }
+.room-preview > * { text-align: left; }
+.room-preview-brand { color: #0f766e; font-size: 1.35em; font-weight: 800; letter-spacing: .06em; }
+.room-preview h3 { margin: 12px 0 8px; font-size: 1.2em; letter-spacing: .08em; }
+.room-preview-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 7px 12px; margin: 12px 0; }
+.room-preview-grid span { color: #64748b; }
+.room-preview-grid b { color: #1e293b; }
+.kot-preview { border-left: 4px solid #f59e0b; }
+.printer-routing-note { display: flex; gap: 8px; align-items: baseline; margin-top: 14px; padding: 10px 12px; border-radius: 9px; color: #475569; background: #f8fafc; font-size: .78rem; }
+.printer-routing-note strong { color: #1e293b; white-space: nowrap; }
+@media (max-width: 640px) {
+  .settings-hero { padding: 18px; }
+  .settings-hero-icon { width: 44px; height: 44px; font-size: 1.3rem; }
+  .settings-hero h1 { font-size: 1.4rem; }
+  .settings-quick-nav { position: static; }
+  .printer-section-heading, .printer-preview-toolbar { flex-direction: column; align-items: flex-start; }
+  .printer-routing-note { flex-direction: column; gap: 3px; }
+  .printer-preview-stage { min-height: 260px; padding: 14px; }
+  .sync-panel { padding: 14px; }
+  .sync-role-row { grid-template-columns: 1fr; gap: 8px; }
+  .sync-role-row label { padding: 11px; }
+}
+.settings-page > .settings-section:first-of-type { margin-top: 0; }
+
+/* ---------- Room A4 Invoice ─────────────────────────────────────────────
+   Scoped entirely under .room-a4-invoice so it never affects Food bill CSS.
+   Uses a strict label/value table for every metadata field so columns always
+   align regardless of content length. ─────────────────────────────────── */
+
+.room-a4-invoice {
+  width: 100%;
+  max-width: 780px;
+  background: #fff;
+  color: #1f2937;
+  font-family: var(--font-body, 'DM Sans', sans-serif);
+  font-size: 0.9rem;
+  padding: 0 0 28px;        /* top/sides handled by letterhead band; bottom padding remains */
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  /* No overflow:hidden here — it would clip the right side of full-width tables
+     that carry margin-left/right insets, cutting off the Amount column. The
+     letterhead dark band handles its own top-corner rounding instead. */
+}
+
+/* ── Letterhead — full-bleed header band, same edge-to-edge treatment as title bar ── */
+.ri-letterhead {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #1f2937;       /* dark header band */
+  padding: 20px 28px 18px;
+  margin-bottom: 0;
+  border-radius: 6px 6px 0 0; /* rounds the card's top corners without needing overflow:hidden on the parent */
+}
+.ri-letterhead .food-image { border-radius: 8px; flex-shrink: 0; }
+.ri-letterhead-text { flex: 1; }
+.ri-letterhead-text h1 {
+  font-size: 1.35rem;
+  margin: 0 0 3px;
+  font-family: var(--font-heading, inherit);
+  font-weight: 700;
+  color: #f9fafb;
+}
+.ri-letterhead-text p { margin: 1px 0; font-size: 0.82rem; color: #9ca3af; }
+.ri-letterhead-contact { display: flex; gap: 16px; margin-top: 3px; }
+
+/* ── Title bar — sits directly below letterhead, shares same horizontal inset ── */
+.ri-title-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f1f5f9;
+  border-bottom: 2px solid #e2e8f0;
+  padding: 8px 28px;        /* matches letterhead horizontal padding */
+  margin: 0 0 18px;         /* no negative margin needed — card has no side padding now */
+}
+
+/* ── All inner content gets uniform horizontal padding ── */
+/* NOTE: .ri-table is intentionally excluded from this rule.
+   A table with width:100% + margin-left/right overflows its container by the
+   margin amount, clipping the rightmost column. The table inset is handled
+   instead via first-child/last-child cell padding below. */
+.ri-header-grid,
+.ri-divider,
+.ri-stay-bar,
+.ri-totals-wrap,
+.ri-room-section,
+.ri-upi,
+.ri-footer,
+.ri-signature-row,
+.ri-powered-by {
+  margin-left: 28px;
+  margin-right: 28px;
+}
+
+/* ── Table horizontal inset via cell padding (not margin) ── */
+/* This keeps the table itself at exactly width:100% while still visually
+   aligning with the rest of the card content. Applied to ALL .ri-table
+   instances including the one inside .ri-room-section (which already had
+   its own margin-reset but gains the same consistent inset this way). */
+.ri-table th:first-child,
+.ri-table td:first-child { padding-left: 28px; }
+.ri-table th:last-child,
+.ri-table td:last-child  { padding-right: 28px; }
+.ri-title-text {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #1f2937;
+}
+.ri-title-sub {
+  font-size: 0.78rem;
+  color: #6b7280;
+  letter-spacing: 0.03em;
+}
+.ri-cancelled-badge, .ri-paid-badge {
+  margin-left: auto;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.ri-cancelled-badge { background: #fee2e2; color: #b91c1c; }
+.ri-paid-badge { background: #dcfce7; color: #15803d; }
+
+/* ── Two-column header grid (Invoice details | Guest details) ── */
+.ri-header-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin-bottom: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.ri-header-col {
+  padding: 12px 16px;
+}
+.ri-header-col:first-child {
+  border-right: 1px solid #e5e7eb;
+}
+.ri-section-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6b7280;
+  margin: 0 0 8px;
+}
+
+/* ── Info table: label col fixed width, value col fills remainder ── */
+.ri-info-table { width: 100%; border-collapse: collapse; }
+.ri-info-label {
+  width: 38%;
+  font-size: 0.8rem;
+  color: #6b7280;
+  padding: 3px 10px 3px 0;
+  vertical-align: top;
+  white-space: nowrap;
+}
+.ri-info-value {
+  font-size: 0.85rem;
+  color: #111827;
+  padding: 3px 0;
+  vertical-align: top;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* ── Horizontal divider ── */
+.ri-divider {
+  height: 2px;
+  background: #e5e7eb;
+  margin: 0 0 16px;
+}
+
+/* ── Stay summary bar (check-in / check-out / duration) ── */
+.ri-stay-bar {
+  display: flex;
+  flex-wrap: wrap;              /* wrap cells instead of overflowing on narrow screens */
+  gap: 0;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+.ri-stay-cell {
+  flex: 1 1 140px;              /* each cell min 140px, grows equally */
+  display: flex;
+  flex-direction: column;
+  padding: 10px 12px;
+  border-right: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+  min-width: 0;
+}
+/* remove right border on last in a visual row, remove bottom border on last row */
+.ri-stay-cell:last-child { border-right: none; }
+.ri-stay-bar .ri-stay-cell:nth-last-child(-n+2) { border-bottom: none; }
+.ri-stay-label {
+  font-size: 0.67rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #9ca3af;
+  margin-bottom: 3px;
+  white-space: nowrap;
+}
+.ri-stay-val {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #1f2937;
+  word-break: break-word;       /* long dates wrap instead of overflow */
+}
+.ri-stay-type { font-weight: 400; color: #4b5563; }
+
+/* ── Charges table ── */
+.ri-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  margin-bottom: 0;
+  table-layout: fixed;          /* fixed layout: columns never blow past container */
+}
+.ri-table thead tr { background: #f1f5f9; }
+.ri-table th {
+  text-align: left;
+  padding: 8px 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #374151;
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+  overflow: hidden;
+}
+.ri-table td {
+  padding: 9px 8px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #1f2937;
+  overflow: hidden;
+  word-break: break-word;
+}
+.ri-table tbody tr:last-child td { border-bottom: none; }
+
+/* Column widths: Description gets all remaining space; numeric cols are fixed.
+   The Amount column (col 4) has padding-right: 28px from the first/last-child
+   rule above — its width must absorb that padding so the content area still
+   fits "₹99,999.00" without wrapping. Rate/Night (col 3) similarly needs room
+   for the value text. Nights (col 2) is a 1-2 digit number so 48px is fine. */
+.ri-table th:nth-child(1), .ri-table td:nth-child(1) { width: auto; }    /* Description — fills */
+.ri-table th:nth-child(2), .ri-table td:nth-child(2) { width: 48px; }    /* Nights */
+.ri-table th:nth-child(3), .ri-table td:nth-child(3) { width: 108px; }   /* Rate/Night */
+.ri-table th:nth-child(4), .ri-table td:nth-child(4) { width: 128px; }   /* Amount (100 content + 28 padding) */
+
+/* Right-align every column except Description */
+.ri-table th:not(:first-child),
+.ri-table td:not(:first-child) { text-align: right; }
+
+/* Numeric cells never wrap — amount values must always stay on one line */
+.ri-table th:nth-child(2), .ri-table td:nth-child(2),
+.ri-table th:nth-child(3), .ri-table td:nth-child(3),
+.ri-table th:nth-child(4), .ri-table td:nth-child(4) { white-space: nowrap; }
+
+/* ── Totals block ── */
+.ri-totals-wrap {
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 10px;
+  margin-bottom: 16px;
+  /* totals must not overflow — constrain to available width */
+  min-width: 0;
+}
+.ri-room-totals-wrap { margin-bottom: 0; border-top: none; padding-top: 6px; padding-left: 14px; padding-right: 14px; }
+.ri-totals {
+  /* Use percentage + max so it scales on mobile but caps on desktop */
+  width: min(340px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+.ri-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;                    /* minimum gap so label & value never touch */
+  font-size: 0.88rem;
+  padding: 1px 0;
+  min-width: 0;
+}
+/* Label shrinks, amount never wraps */
+.ri-total-row > span:first-child {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ri-total-row > span:last-child {
+  flex-shrink: 0;
+  white-space: nowrap;
+  text-align: right;
+}
+.ri-total-muted { color: #4b5563; }
+.ri-grand-total {
+  font-weight: 700;
+  font-size: 1rem;
+  border-top: 2px solid #1f2937;
+  padding-top: 7px;
+  margin-top: 3px;
+  color: #111827;
+}
+.ri-advance-row { color: #0a7a3d; font-weight: 600; }
+.ri-balance-row {
+  font-weight: 700;
+  border-top: 1px dashed #9ca3af;
+  padding-top: 5px;
+  margin-top: 2px;
+}
+.ri-fully-paid { color: #15803d; }
+
+/* ── Group room section ── */
+.ri-room-section {
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+/* .ri-room-section carries its own 28px side margins from the shared rule.
+   The table inside ALSO gets the global 28px first/last-child cell padding,
+   which would double the inset (section margin + cell padding = 56px from
+   card edge). Override back to 14px so the inset from the SECTION border
+   looks balanced, matching the room-header's own 14px padding. */
+.ri-room-section > .ri-table th:first-child,
+.ri-room-section > .ri-table td:first-child { padding-left: 14px; }
+.ri-room-section > .ri-table th:last-child,
+.ri-room-section > .ri-table td:last-child  { padding-right: 14px; }
+.ri-room-section > .ri-totals-wrap {
+  margin-left: 0;
+  margin-right: 0;
+}
+.ri-room-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f8fafc;
+  padding: 9px 14px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.ri-room-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: #1f2937;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.ri-room-title {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: #1f2937;
+}
+.ri-room-dates {
+  margin-left: auto;
+  font-size: 0.78rem;
+  color: #6b7280;
+  white-space: normal;          /* allow wrapping on narrow screens */
+  text-align: right;
+  min-width: 0;
+}
+.ri-room-section .ri-table { border-radius: 0; }
+.ri-room-section .ri-table th { border-top: none; }
+
+/* ── UPI QR ── */
+.ri-upi {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin: 14px 0;
+  font-size: 0.82rem;
+  color: #4b5563;
+}
+
+/* ── Footer ── */
+.ri-footer {
+  text-align: center;
+  font-size: 0.82rem;
+  margin: 14px 0 6px;
+  color: #4b5563;
+  font-style: italic;
+}
+
+/* ── Signature row ── */
+.ri-signature-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 40px 0 12px;
+}
+.ri-signature-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 200px;
+  font-size: 0.78rem;
+  color: #6b7280;
+}
+.ri-signature-line { width: 100%; border-top: 1px solid #9ca3af; }
+
+/* ── Powered-by strip ── */
+.ri-powered-by {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px dashed #d97706;
+  background: #fff7ed;
+  color: #92400e;
+  letter-spacing: 0.02em;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.ri-powered-by strong { color: #b45309; }
+.ri-powered-by-logo { width: 16px; height: 16px; object-fit: contain; border-radius: 3px; flex-shrink: 0; }
+
+/* ── Print overrides ── */
+@media print {
+  .thermal-bill-window {
+    --print-width: var(--receipt-width, 80mm);
+    page: thermal;
+  }
+  .room-bill-window { page: room; }
+  @page thermal { size: 80mm auto; margin: 0; }
+  @page room { size: A4 portrait; margin: 14mm; }
+  html, body { margin: 0; padding: 0; }
+  .thermal-bill-window {
+    width: var(--print-width);
+    padding: 0;
+    align-items: flex-start;
+  }
+  .thermal-bill-window .receipt {
+    width: var(--print-width);
+    max-width: none;
+    padding: 3mm;
+    box-sizing: border-box;
+  }
+  .room-bill-window {
+    width: 100%;
+    padding: 0;
+    align-items: flex-start;
+    page: room;
+  }
+  .room-bill-window .room-a4-invoice {
+    box-shadow: none;
+    max-width: none;
+    padding: 0;
+    font-size: 0.82rem;
+  }
+  /* On print, letterhead dark background must render */
+  .ri-letterhead {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* ── Mobile overrides ── */
+@media screen and (max-width: 600px) {
+  .room-a4-invoice {
+    font-size: clamp(0.78rem, 2.6vw, 0.9rem);
+    overflow-wrap: anywhere;
+  }
+  .ri-letterhead {
+    padding: clamp(12px, 3.5vw, 16px) clamp(12px, 3.5vw, 16px);
+    gap: 10px;
+  }
+  .ri-letterhead-text { min-width: 0; }
+  .ri-letterhead-text h1 {
+    font-size: clamp(1.05rem, 5vw, 1.35rem);
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+  }
+  .ri-letterhead-text p {
+    font-size: clamp(0.7rem, 2.5vw, 0.82rem);
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+  .ri-letterhead-contact {
+    flex-wrap: wrap;
+    gap: 2px 10px;
+  }
+  .ri-title-bar {
+    flex-wrap: wrap;
+    gap: 4px 8px;
+    padding: 8px 14px;
+  }
+  .ri-title-text {
+    font-size: clamp(0.78rem, 3.5vw, 0.95rem);
+    letter-spacing: 0.07em;
+  }
+  .ri-title-sub {
+    font-size: clamp(0.68rem, 2.6vw, 0.78rem);
+    overflow-wrap: anywhere;
+  }
+  .ri-cancelled-badge,
+  .ri-paid-badge {
+    margin-left: 0;
+    font-size: clamp(0.6rem, 2.2vw, 0.72rem);
+  }
+
+  /* Inner content: reduced side inset on mobile */
+  .ri-header-grid,
+  .ri-divider,
+  .ri-stay-bar,
+  .ri-totals-wrap,
+  .ri-room-section,
+  .ri-upi,
+  .ri-footer,
+  .ri-signature-row,
+  .ri-powered-by { margin-left: 10px; margin-right: 10px; }
+
+  /* Header grid stacks vertically */
+  .ri-header-grid { grid-template-columns: 1fr; }
+  .ri-header-col {
+    padding: 10px 12px;
+    min-width: 0;
+  }
+  .ri-header-col:first-child { border-right: none; border-bottom: 1px solid #e5e7eb; }
+  .ri-section-label {
+    font-size: clamp(0.62rem, 2.2vw, 0.68rem);
+    margin-bottom: 5px;
+  }
+  .ri-info-label {
+    width: 34%;
+    font-size: clamp(0.68rem, 2.5vw, 0.8rem);
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+  .ri-info-value {
+    font-size: clamp(0.72rem, 2.7vw, 0.85rem);
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+
+  /* Let the mobile device decide the column widths instead of carrying the
+     desktop pixel widths into a narrow viewport. This keeps all four columns
+     visible and gives the long Rate / Night heading room to wrap. */
+  .ri-table th:nth-child(1), .ri-table td:nth-child(1) { width: 40%; }
+  .ri-table th:nth-child(2), .ri-table td:nth-child(2) { width: 11%; }
+  .ri-table th:nth-child(3), .ri-table td:nth-child(3) { width: 24%; }
+  .ri-table th:nth-child(4), .ri-table td:nth-child(4) { width: 25%; }
+  .ri-table th,
+  .ri-table td {
+    padding: 7px 4px;
+    font-size: clamp(0.68rem, 2.35vw, 0.82rem);
+    line-height: 1.3;
+  }
+  .ri-table th {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    letter-spacing: 0.025em;
+  }
+  .ri-table td:first-child {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .ri-table td:not(:first-child) {
+    font-size: clamp(0.67rem, 2.25vw, 0.82rem);
+  }
+  .ri-table th:first-child, .ri-table td:first-child { padding-left: 10px; }
+  .ri-table th:last-child,  .ri-table td:last-child  { padding-right: 10px; }
+  /* Room-section table: section has its own 10px margin, so keep same inset */
+  .ri-room-section > .ri-table th:first-child,
+  .ri-room-section > .ri-table td:first-child { padding-left: 10px; }
+  .ri-room-section > .ri-table th:last-child,
+  .ri-room-section > .ri-table td:last-child  { padding-right: 10px; }
+
+  .ri-stay-cell {
+    flex-basis: 50%;
+    padding: 8px 10px;
+  }
+  .ri-stay-label {
+    font-size: clamp(0.58rem, 2vw, 0.67rem);
+    letter-spacing: 0.05em;
+  }
+  .ri-stay-val {
+    font-size: clamp(0.7rem, 2.7vw, 0.84rem);
+    line-height: 1.3;
+  }
+  .ri-room-header {
+    flex-wrap: wrap;
+    gap: 4px 8px;
+    padding: 9px 10px;
+  }
+  .ri-room-title,
+  .ri-room-dates {
+    font-size: clamp(0.68rem, 2.5vw, 0.82rem);
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .ri-room-dates { margin-left: 0; }
+
+  /* Totals: full width on mobile so amount never gets squeezed */
+  .ri-totals-wrap { justify-content: stretch; }
+  .ri-totals { width: 100%; }
+  .ri-total-row {
+    gap: 8px;
+    font-size: clamp(0.72rem, 2.7vw, 0.88rem);
+    line-height: 1.35;
+  }
+  .ri-grand-total { font-size: clamp(0.86rem, 3.2vw, 1rem); }
+  .ri-total-row > span:first-child {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .ri-footer {
+    font-size: clamp(0.7rem, 2.5vw, 0.82rem);
+    line-height: 1.4;
+  }
+  .ri-signature-box {
+    width: min(100%, 200px);
+    font-size: clamp(0.68rem, 2.4vw, 0.78rem);
+  }
+  .ri-powered-by {
+    font-size: clamp(0.62rem, 2.2vw, 0.72rem);
+    text-align: center;
+  }
+
+  /* Signature row stacks */
+  .ri-signature-row { flex-direction: column; align-items: center; gap: 28px; }
+}
+
+/* ---------- Responsive food bill/KOT screens ----------
+   Food receipts keep their configured thermal width for printing, but the
+   on-screen view must still fit narrow phones and browser clients. */
+@media screen and (max-width: 600px) {
+  .bill-window {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 8px;
+    gap: 10px;
+    overflow-x: hidden;
+  }
+  .bill-window .receipt {
+    width: min(var(--receipt-width, 80mm), 100%);
+    max-width: 100%;
+    min-width: 0;
+    font-size: clamp(0.72rem, 2.7vw, 0.9rem);
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+  .bill-window .receipt h2 {
+    font-size: clamp(1rem, 5vw, 1.35rem);
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+  }
+  .bill-window .receipt-sub,
+  .bill-window .receipt-title {
+    font-size: clamp(0.68rem, 2.7vw, 0.85rem);
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+  .bill-window .receipt-meta {
+    gap: 3px;
+    font-size: clamp(0.66rem, 2.5vw, 0.8rem);
+    line-height: 1.35;
+  }
+  .bill-window .receipt-table {
+    width: 100%;
+    table-layout: fixed;
+    font-size: clamp(0.64rem, 2.45vw, 0.8rem);
+  }
+  .bill-window .receipt-table th,
+  .bill-window .receipt-table td {
+    padding: 4px 2px;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+    vertical-align: top;
+  }
+  .bill-window .receipt-table th:first-child,
+  .bill-window .receipt-table td:first-child {
+    width: 46%;
+    text-align: left;
+  }
+  .bill-window .receipt-table th:nth-child(2),
+  .bill-window .receipt-table td:nth-child(2) {
+    width: 14%;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .bill-window .receipt-table th:nth-child(3),
+  .bill-window .receipt-table td:nth-child(3),
+  .bill-window .receipt-table th:nth-child(4),
+  .bill-window .receipt-table td:nth-child(4) {
+    width: 20%;
+    text-align: right;
+    white-space: nowrap;
+    overflow-wrap: normal;
+  }
+  .bill-window .receipt-totals {
+    gap: 4px;
+    font-size: clamp(0.7rem, 2.7vw, 0.85rem);
+  }
+  .bill-window .receipt-totals div {
+    gap: 8px;
+    line-height: 1.35;
+  }
+  .bill-window .receipt-totals div span:first-child {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .bill-window .receipt-totals div span:last-child {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .bill-window .grand-total {
+    font-size: clamp(0.84rem, 3.4vw, 1rem);
+  }
+  .bill-window .receipt-footer {
+    font-size: clamp(0.68rem, 2.5vw, 0.8rem);
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+  .bill-window .receipt-powered-by {
+    max-width: 100%;
+    box-sizing: border-box;
+    font-size: clamp(0.62rem, 2.3vw, 0.75rem);
+    line-height: 1.3;
+  }
+  .bill-window .receipt-upi img,
+  .bill-window .receipt-upi canvas {
+    max-width: min(150px, 65vw);
+    height: auto;
+  }
+  .bill-window .receipt-actions {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .bill-window .receipt-actions .btn {
+    min-height: 36px;
+  }
+  .kot-window .kot-receipt .receipt-table th:first-child,
+  .kot-window .kot-receipt .receipt-table td:first-child {
+    width: 78%;
+  }
+  .kot-window .kot-receipt .receipt-table th:nth-child(2),
+  .kot-window .kot-receipt .receipt-table td:nth-child(2) {
+    width: 22%;
+  }
+}
+
+
+/* ---------- KOT (Kitchen Order Ticket) ---------- */
+.kot-receipt h2 { font-size: 1.1rem; letter-spacing: 0.5px; }
+.kot-table th, .kot-table td { font-size: 0.95rem; padding: 5px 2px; }
+.kot-table th:last-child, .kot-table td:last-child { text-align: right; }
+.kot-footer { font-weight: 700; letter-spacing: 0.5px; }
+
+/* ---------- Order note & QR / inventory extras ---------- */
+.order-note-input {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  resize: vertical;
+  margin-top: 6px;
+}
+
+.toast-action {
+  margin-left: 8px;
+  color: white;
+  text-decoration: underline;
+  font-size: 0.85rem;
+}
+
+.qr-loading { font-size: 0.8rem; color: var(--text-muted); padding: 20px; text-align: center; }
+.qr-code-img { display: block; margin: 0 auto; border-radius: 8px; background: white; padding: 6px; }
+
+.upi-qr-box {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  background: #f8fafc;
+}
+.upi-qr-hint { font-size: 0.78rem; color: var(--text-muted); text-align: center; }
+.upi-qr-hint.warn { color: #b45309; }
+
+.receipt-upi { display: flex; flex-direction: column; align-items: center; gap: 4px; margin-top: 8px; }
+
+.settings-hint { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+.settings-code {
+  display: block;
+  margin: 8px 0;
+  padding: 10px;
+  overflow-x: auto;
+  border-radius: 8px;
+  background: #111827;
+  color: #e5e7eb;
+  font: 0.78rem/1.55 Consolas, monospace;
+  white-space: pre-wrap;
+}
+
+/* ---------- Features (Table Mgmt / Captain App / Multi-Terminal toggles) ---------- */
+.features-list { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
+.feature-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 8px;
+  transition: opacity 0.15s ease;
+}
+.feature-toggle-row.feature-locked { opacity: 0.6; background: #f9fafb; }
+.feature-toggle-text { display: flex; flex-direction: column; gap: 2px; }
+.feature-toggle-label { font-weight: 600; }
+.feature-toggle-desc { font-size: 0.82rem; color: var(--text-muted); }
+
+/* Toggle switch (replaces plain checkboxes) */
+.toggle-switch {
+  position: relative;
+  width: 42px;
+  height: 24px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  border: none;
+  background: #cbd5e1;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s ease;
+}
+.toggle-switch.on { background: var(--accent, #16a34a); }
+.toggle-switch:disabled { cursor: not-allowed; opacity: 0.7; }
+.toggle-switch-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  transition: transform 0.2s ease;
+}
+.toggle-switch.on .toggle-switch-knob { transform: translateX(18px); }
+
+/* ---------- Multi-Terminal Sync setup panel ---------- */
+.sync-panel {
+  margin-top: 18px;
+  padding: 18px;
+  border: 1px solid #dbe4ec;
+  border-radius: 12px;
+  background: #f8fafc;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.7);
+}
+.sync-panel h4 { margin: 0 0 12px; font-size: 1rem; }
+.sync-role-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 0 0 16px; }
+.sync-role-row label {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #dbe4ec;
+  border-radius: 9px;
+  background: #fff;
+  color: #334155;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 650;
+  line-height: 1.4;
+}
+.sync-role-row label:has(input:checked) { border-color: #5eead4; background: #f0fdfa; }
+.sync-role-row input[type="radio"] { width: 17px; height: 17px; flex: 0 0 auto; margin: 1px 0 0; accent-color: #0f766e; }
+.sync-host-info, .sync-client-info { display: flex; flex-direction: column; gap: 12px; padding-top: 2px; }
+.sync-field-label { display: flex; flex-direction: column; gap: 6px; font-size: 0.8rem; font-weight: 700; line-height: 1.3; color: #475569; }
+.sync-field-label input { width: 100%; min-height: 40px; padding: 9px 11px; border: 1px solid #cbd5e1; border-radius: 9px; background: #fff; color: #1e293b; font: inherit; font-weight: 450; }
+.sync-field-label input:focus { border-color: #0f766e; outline: none; box-shadow: 0 0 0 3px rgba(20,184,166,.13); }
+.sync-test-ok { color: #16a34a; font-weight: 600; }
+.sync-test-fail { color: #dc2626; font-weight: 600; }
+.host-address-card {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 12px;
+  border: 1px solid #99f6e4;
+  border-radius: 9px;
+  background: #f0fdfa;
+  color: #134e4a;
+}
+.host-address-label { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.host-address-card code {
+  width: fit-content;
+  max-width: 100%;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: #fff;
+  color: #0f766e;
+  font-size: .95rem;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+.host-address-card small { color: #0f766e; font-size: .75rem; }
+/* Informational (not an error) — same calm/professional treatment as
+   .help-panel: a soft tinted card instead of bare red/green text, so a
+   "you can still connect, just Staff can't log in yet" note doesn't read
+   as a failure. */
+.sync-test-note {
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  color: #0c4a6e;
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1.5;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin: 4px 0 0;
+}
+
+/* ---------- Tables (Table/Area Management floor view) ---------- */
+.tables-legend { display: flex; gap: 14px; flex-wrap: wrap; margin: 10px 0 18px; font-size: 0.85rem; }
+.tables-area-group { margin-bottom: 20px; }
+.tables-area-group h3 { margin-bottom: 8px; }
+.tables-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 12px;
+}
+.table-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 10px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.table-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-card-hover); }
+.table-card-name { font-weight: 700; font-size: 1.05rem; }
+.table-card-status { font-size: 0.78rem; }
+.table-card-capacity { font-size: 0.75rem; color: var(--text-muted); }
+.table-card-active-badge {
+  margin-top: 4px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  background: #1e293b;
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.table-empty, .table-card.table-empty { background: #ecfdf5; border-color: #a7f3d0; }
+.table-occupied, .table-card.table-occupied { background: #fff7ed; border-color: #fed7aa; }
+.table-billed, .table-card.table-billed { background: #eff6ff; border-color: #bfdbfe; }
+.table-card.table-active { outline: 3px solid #6366f1; }
+
+/* Legend chips (colored swatch + label, e.g. "🟢 Blank = Empty") — a
+   literal color key so the same colors used on the actual table circles
+   below are explained once, plainly, instead of relying on emoji alone. */
+.table-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid var(--border-color, #e5e7eb);
+  font-weight: 500;
+}
+.table-legend-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #cbd5e1;
+  background: #fff;
+  flex-shrink: 0;
+}
+.table-legend-swatch.is-empty { background: #fff; border-color: #cbd5e1; }
+.table-legend-swatch.is-occupied { background: #f97316; border-color: #ea580c; }
+.table-legend-swatch.is-billed { background: #3b82f6; border-color: #2563eb; }
+
+/* Card contents — name + capacity share a row, status pill sits below,
+   and (Owner-only) small light-pink Edit/Delete icons sit at the bottom. */
+.table-card {
+  align-items: stretch;
+  padding-top: 14px;
+}
+.table-card-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 6px;
+}
+.table-card-name { text-align: left; }
+
+.table-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.65);
+  color: #334155;
+  align-self: flex-start;
+}
+.table-status-dot { width: 7px; height: 7px; border-radius: 50%; background: #94a3b8; }
+.table-card.table-empty .table-status-dot { background: #22c55e; }
+.table-card.table-occupied .table-status-dot { background: #f97316; }
+.table-card.table-billed .table-status-dot { background: #3b82f6; }
+
+.table-capacity-chip {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: rgba(0, 0, 0, 0.05);
+  padding: 2px 9px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+/* Wrap the card's two content groups (name+capacity vs. status/owner-
+   actions/arrow). On desktop both are unwrapped via `display: contents` so
+   they don't change the existing vertical-card flex layout at all; on
+   mobile (480px breakpoint below) `.table-card-main` becomes the growing
+   left column and `.table-card-side` becomes the fixed-width right side of
+   a Bookings-style list row (badge + arrow). */
+.table-card-main, .table-card-side { display: contents; }
+
+/* Chevron shown only in the mobile single-column list view (480px
+   breakpoint below) — hidden entirely on the desktop grid of cards. */
+.table-list-arrow { display: none; }
+
+/* Owner-only Edit/Delete — small light-pink circular icons, always visible
+   (not hidden behind hover) so touch/tablet users can reach them too. */
+.table-card-owner-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+.table-card-icon-btn {
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #fce7f3;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  font-size: 0.72rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.table-card-icon-btn:hover { background: #fbcfe8; transform: scale(1.08); }
+
+/* ---------- Table cards v2: circular name badge + waiter assignment ----------
+   Redesigned floor-plan card: table name sits inside a center circle that's
+   solid green when the table is in use (OCCUPIED/BILLED) and blank/outlined
+   when EMPTY, seating capacity is a small badge in the card's top corner,
+   and a Waiter row below the status pill shows who (if anyone) is currently
+   serving it — tap the pencil/plus icon to assign someone from the Staff
+   list. No running timer is shown by design (unlike some POS references) to
+   keep the card simple. */
+.tables-status-tabs { display: flex; gap: 10px; margin: -8px 0 16px; flex-wrap: wrap; }
+.tables-status-tab {
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  background: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.tables-status-tab.is-active-tab.is-selected { background: #16a34a; border-color: #16a34a; color: #fff; }
+.tables-status-tab.is-inactive-tab.is-selected { background: #334155; border-color: #334155; color: #fff; }
+
+.table-card-v2 {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 18px 10px 12px;
+  border-radius: 14px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  background: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.table-card-v2:hover { transform: translateY(-2px); box-shadow: var(--shadow-card-hover); }
+.table-card-v2.status-occupied { background: #fff7ed; border-color: #fed7aa; }
+.table-card-v2.status-billed { background: #eff6ff; border-color: #bfdbfe; }
+.table-card-v2.table-active { outline: 3px solid #6366f1; }
+.table-card-v2.status-empty .table-status-dot { background: #22c55e; }
+.table-card-v2.status-occupied .table-status-dot { background: #f97316; }
+.table-card-v2.status-billed .table-status-dot { background: #3b82f6; }
+
+.table-card-v2-occupancy {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: rgba(0, 0, 0, 0.05);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.table-card-v2-owner-actions {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  display: flex;
+  gap: 5px;
+}
+
+.table-card-v2-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-top: 14px;
+  border: 2px solid #cbd5e1;
+  background: transparent;
+  color: #334155;
+}
+.table-card-v2-circle.is-occupied {
+  background: #f97316;
+  border-color: #ea580c;
+  color: #fff;
+  box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.14);
+}
+.table-card-v2-circle.is-billed {
+  background: #3b82f6;
+  border-color: #2563eb;
+  color: #fff;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.14);
+}
+
+.table-card-v2-waiter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  font-size: 0.75rem;
+  margin-top: 4px;
+  width: 100%;
+  min-height: 26px;
+  padding: 0 4px;
+}
+.table-card-v2-waiter-label {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  flex-shrink: 0;
+}
+.table-card-v2-waiter-value {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.table-card-v2-waiter-name {
+  font-weight: 600;
+  color: #334155;
+  max-width: 90px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.table-card-v2-waiter-select { font-size: 0.72rem; padding: 2px 4px; border-radius: 6px; border: 1px solid var(--border-color, #e5e7eb); max-width: 110px; }
+.table-card-v2-active-badge {
+  margin-top: 2px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  background: #1e293b;
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* ---------- Inventory ---------- */
+.inventory-page { display: flex; flex-direction: column; gap: 14px; }
+.low-stock-banner {
+  background: #fef3c7;
+  border: 1px solid #fcd34d;
+  color: #92400e;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+.low-stock-row { background: #fee2e2 !important; }
+.alert-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: var(--danger, #dc2626);
+  color: white;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  min-width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  padding: 0 3px;
+}
+.icon-btn { position: relative; }
+
+.recipe-editor { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
+.recipe-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.recipe-row select { flex: 2; }
+.recipe-row input { flex: 1; min-width: 0; }
+.recipe-unit { font-size: 0.8rem; color: var(--text-muted); min-width: 28px; }
+.recipe-actions { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+.toast-inline { color: #16a34a; font-size: 0.85rem; font-weight: 600; }
+
+/* ---------- License expiry warning banner ---------- */
+.expiry-warning-banner {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  background: #fef3c7; border-bottom: 1px solid #fcd34d;
+  color: #92400e; padding: 8px 20px;
+  font-size: 0.88rem; font-weight: 500; flex-shrink: 0; z-index: 40;
+}
+.expiry-warning-banner-dismiss {
+  background: transparent; border: none; color: #92400e;
+  font-size: 1rem; line-height: 1; padding: 2px 6px; cursor: pointer;
+  opacity: 0.6; flex-shrink: 0; border-radius: 4px;
+}
+.expiry-warning-banner-dismiss:hover { opacity: 1; background: rgba(0,0,0,0.06); }
+
+.report-period-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+
+@media print {
+  .no-print { display: none !important; }
+}
+
+/* Mobile-only controls: hidden by default (desktop/tablet widths), the
+   @media (max-width: 768px) block below turns them on. Defined here — BEFORE
+   the media query — so the later, matching mobile rule wins the cascade
+   (equal-specificity rules: later + matching beats earlier + unconditional). */
+.mobile-order-bar, .cart-mobile-close { display: none; }
+
+/* ---------- Responsive: tablets & phones ---------- */
+@media (max-width: 1024px) {
+  .cart-panel { width: 300px; }
+  .report-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .hamburger { display: inline-block; }
+  .sidebar {
+    position: fixed;
+    top: 52px; left: 0; bottom: 0;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+    z-index: 40;
+    width: 200px;
+  }
+  .sidebar:hover { width: 200px; }
+  .nav-label { opacity: 1; }
+  .sidebar.open { transform: translateX(0); box-shadow: 2px 0 10px rgba(0,0,0,0.2); }
+
+  /* Compact the topbar so it never has to squeeze past the phone's width —
+     this is what was causing the whole app to scroll sideways into blank
+     space (the clock + username + module-switch text together were wider
+     than the screen). Keep only the essentials visible. */
+  .topbar { padding: 8px 10px; gap: 6px; }
+  .topbar h1 { font-size: 0.95rem; }
+  .current-user-badge span.user-name-text { display: none; }
+  .module-switch button { padding: 6px 8px; font-size: 0.72rem; }
+  .topbar-right { gap: 8px; }
+  .counter-connection-badge { max-width: 116px; padding: 5px 7px; font-size: .65rem; }
+
+  .billing-page { flex-direction: column; }
+  .menu-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+  .fm-form-card { width: 100%; }
+  .fm-list-card { min-width: 0; width: 100%; }
+  .food-management { flex-direction: column; }
+  .settings-row { flex-direction: column; }
+  .settings-section { padding: 18px 16px; margin-top: 14px; border-radius: 12px; }
+  .settings-section > .settings-row { margin-top: 12px; }
+  .settings-fieldset { padding: 14px; gap: 14px; }
+  .settings-extra { gap: 8px; }
+  .settings-extra .btn { flex: 1 1 180px; }
+  .whatsapp-cloud-settings,
+  .whatsapp-cloud-credentials {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .whatsapp-cloud-settings > label,
+  .whatsapp-cloud-credentials > input,
+  .whatsapp-cloud-credentials > .btn {
+    width: 100%;
+  }
+  .whatsapp-cloud-settings select {
+    min-width: 0;
+    text-overflow: ellipsis;
+  }
+  .whatsapp-cloud-settings .help-panel {
+    padding: 11px 12px;
+    font-size: .76rem;
+  }
+  .settings-logo-row { align-items: flex-start; flex-wrap: wrap; }
+  .settings-quick-nav a { flex: 1 1 auto; text-align: center; }
+  .backup-folder-row { flex-direction: column; align-items: stretch; }
+  .backup-folder-row button { width: 100%; }
+
+  /* List headers (e.g. "Rooms (2)" + status legend, "Menu Items" +
+     category filter): stack title above the legend/controls instead of
+     squeezing them onto one row, which wrapped the heading text itself
+     and made the legend pills overlap awkwardly. */
+  .fm-list-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .fm-list-header > * { width: 100%; }
+  .room-status-legend { width: 100%; }
+
+  /* Bookings: swap the wide table for stacked collapsible cards so the
+     screen never needs to scroll sideways on a phone. Action buttons stack
+     as full-width rows (not side-by-side) so longer labels like "Set
+     Maintenance" never overflow/overlap their neighbor. */
+  .bookings-desktop-table { display: none; }
+  .bookings-mobile-cards { display: block; }
+
+  /* Date Range / Status filter pills (Bookings and similar tabs): shrink
+     padding/font instead of wrapping to a second line, so all of them keep
+     fitting on one row as the screen narrows. */
+  .bookings-filter-group .report-period-tabs { gap: 6px; }
+  .bookings-filter-group .cat-tab { padding: 6px 10px; font-size: 0.78rem; }
+
+  /* Rooms: same idea, but as always-expanded "simple cards" since there's
+     little enough data per room that hiding it behind a tap adds friction
+     without saving much space. */
+  .rooms-desktop-table { display: none; }
+  .rooms-mobile-cards { display: block; }
+
+  /* Food menu items: same simple-card approach as Rooms. */
+  .food-desktop-table { display: none; }
+  .food-mobile-cards { display: block; }
+
+  /* Sales History: collapsible cards, same reasoning as Bookings (many
+     columns + row actions). */
+  .bills-desktop-table { display: none; }
+  .bills-mobile-cards { display: block; }
+
+  /* Staff: collapsible cards (Access selector + row actions hidden until
+     expanded, same reasoning as Bookings/Sales History). */
+  .staff-desktop-table { display: none; }
+  .staff-mobile-cards { display: block; }
+
+  /* Purchase items / recent purchases / recent expenses: always-visible
+     simple cards — few short fields, no (or minimal) row actions, so
+     there's nothing worth hiding behind a tap. */
+  .rawmaterials-desktop-table { display: none; }
+  .rawmaterials-mobile-cards { display: block; }
+  .purchases-desktop-table { display: none; }
+  .purchases-mobile-cards { display: block; }
+  .expenses-desktop-table { display: none; }
+  .expenses-mobile-cards { display: block; }
+
+  /* Room availability cards: the fixed 190px min-height + reserved
+     guest-info space exist to keep multiple side-by-side desktop cards the
+     same height. On a phone the grid collapses to one card per row, so
+     that reserved height just becomes empty space above the Book button —
+     let each card size to its own content instead. */
+  .room-grid { padding: 10px; gap: 10px; }
+  .room-card { min-height: 0; }
+  .room-card-info { min-height: 0; flex: 0 1 auto; }
+
+  /* Tables "+ Add Table"/edit form: same stack-full-width treatment as
+     Backup's folder row above — three fields side-by-side don't fit a
+     phone's width, so stack them instead of forcing a sideways scroll. */
+  .table-add-form-row { flex-direction: column !important; align-items: stretch; }
+  .table-add-form-row label,
+  .table-add-form-row .table-add-form-capacity,
+  .table-add-form-row .fm-row-actions { max-width: 100%; width: 100%; }
+  .table-add-form-row .fm-row-actions button { flex: 1; }
+  .room-card > .btn { margin-top: 10px; }
+
+  /* Row-action buttons (Edit / Check In / Check Out / Cancel etc.) inside
+     narrow table cells: stack them as clear full-width rows instead of
+     letting them wrap inline with barely any gap, which looked cramped/
+     overlapping on phone widths. Applies everywhere .fm-row-actions is used
+     (Food Details, Bookings, Purchases, Reporting bill actions, etc.) */
+  .fm-row-actions { flex-direction: column; align-items: stretch; gap: 6px; min-width: 92px; }
+  .fm-row-actions .btn-link { text-align: center; padding: 6px 10px; }
+
+  /* Slightly larger, more legible table text on phones (default 0.85rem +
+     8px padding was too tight once columns start wrapping). */
+  .fm-table th, .fm-table td { padding: 10px 8px; font-size: 0.82rem; }
+
+  /* Prevent mobile browsers/webviews from auto-zooming the whole page when
+     an input is focused (happens whenever a text input's font is under
+     16px) — a classic "why does the app jump/zoom when I tap a field" bug. */
+  input, select, textarea { font-size: 16px; }
+  .btn, .btn-small { font-size: .8rem; }
+  .btn-link { font-size: 0.85rem; } /* small action buttons stay compact; not real form inputs */
+
+  /* Incoming Orders bell dropdown: a fixed 320px-right-aligned panel can run
+     off the left edge of a narrow phone screen — anchor + size it relative
+     to the viewport instead. */
+  .incoming-orders-dropdown {
+    position: fixed;
+    top: 52px;
+    left: 8px;
+    right: 8px;
+    width: auto;
+    max-height: 70vh;
+  }
+
+  /* Integration settings cards: stack the ID/API-key fields (already handled
+     by .settings-row above) and let the simulate button take full width so
+     it doesn't get cramped next to the hint text. */
+  .integration-card-header { flex-wrap: wrap; }
+  .integration-card .btn-small { width: 100%; margin-top: 6px; }
+
+  /* ---------- Mobile cart drawer ----------
+     Instead of an always-visible side panel eating half the screen, the cart
+     becomes a full-screen overlay that opens from a floating summary bar.
+     Matches the "search/add all items, then review & bill" flow. */
+  .content:has(.billing-page) { overflow: visible; }
+  .menu-section { padding-bottom: 64px; } /* room so the mobile order-bar doesn't cover the last menu row */
+
+  .cart-panel {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    padding: 12px;
+    padding-bottom: 20px;
+  }
+  .cart-panel.mobile-open { display: flex; }
+  .cart-mobile-close { display: inline-flex; }
+
+  .mobile-order-bar {
+    display: flex;
+    position: fixed;
+    left: 10px; right: 10px; bottom: 12px;
+    z-index: 100;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 14px 16px;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgba(225,29,72,0.4);
+  }
+  .mobile-order-bar .mob-count { background: rgba(255,255,255,0.25); border-radius: 999px; padding: 2px 9px; font-size: 0.8rem; margin-right: 8px; }
+  .mobile-order-bar .mob-arrow { font-size: 1.1rem; }
+  .mobile-order-bar > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* Tables: swap the tinted card grid for a single-column list that matches
+     the Bookings/Sales-History mobile card pattern — bold name + small grey
+     capacity subtitle on the left, a solid colored status badge (same
+     green/orange/blue mapping as the desktop legend) + trailing chevron on
+     the right. Card background stays neutral white; the status color now
+     lives on the compact badge instead of tinting the whole row. */
+  .tables-grid { grid-template-columns: 1fr; gap: 10px; }
+  .table-card {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    text-align: left;
+    padding: 12px 14px;
+    gap: 10px;
+    background: var(--surface, #fff);
+    border-color: var(--border);
+  }
+  .table-card.table-empty,
+  .table-card.table-occupied,
+  .table-card.table-billed { background: var(--surface, #fff); border-color: var(--border); }
+
+  .table-card-main {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1;
+    min-width: 0;
+  }
+  .table-card-top-row { flex-direction: column; align-items: flex-start; gap: 2px; width: auto; }
+  .table-card-name { font-size: 0.92rem; font-weight: 700; }
+  /* Capacity chip becomes a plain grey subtitle line under the name,
+     exactly like Bookings' "Room 101 (Standard)" line. */
+  .table-capacity-chip {
+    background: none;
+    padding: 0;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-muted, #777);
+  }
+
+  .table-card-side { display: flex; flex-direction: row; align-items: center; gap: 8px; flex-shrink: 0; }
+  /* Status pill becomes a solid colored badge (dot hidden), matching the
+     exact same padding/radius/font formatting as Bookings' .status-badge
+     (e.g. the "BOOKED" pill), while keeping the empty=green / occupied=orange
+     / billed=blue colors the Tables legend already uses. */
+  .table-status-pill {
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: #f1f5f9;
+    color: #475569;
+  }
+  .table-status-dot { display: none; }
+  .table-card.table-empty .table-status-pill { background: #dcfce7; color: #166534; }
+  .table-card.table-occupied .table-status-pill { background: #ffedd5; color: #c2410c; }
+  .table-card.table-billed .table-status-pill { background: #dbeafe; color: #1e40af; }
+
+  .table-card-owner-actions { margin-top: 0; }
+  .table-list-arrow {
+    display: inline-flex;
+    font-size: 1.4rem;
+    line-height: 1;
+    color: var(--text-muted, #999);
+    flex-shrink: 0;
+  }
+  /* "Currently viewing" badge drops to its own full-width line below the
+     name/status row instead of squeezing into it. */
+  .table-card-active-badge { flex-basis: 100%; margin-top: 2px; }
+}
+
+@media (max-width: 480px) {
+  .content { padding: 10px; }
+  .menu-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .cart-item { grid-template-columns: 1fr auto; }
+  .cart-item-total { text-align: left; }
+  .stat-cards { grid-template-columns: repeat(2, 1fr); }
+
+  /* Phones: the hamburger + module-switch + bell/crown/lock icons were
+     together wider than the screen, squeezing the hotel/restaurant name +
+     logo (.app-brand, flex:1) down to nothing — the name simply never
+     rendered. Free up real space instead of just shrinking fonts: drop the
+     "Food Billing"/"Room Booking" text labels (keep only the 🍽️/🛏️ emoji,
+     still tappable) and tighten the icon cluster's gaps. */
+  .module-switch-label { display: none; }
+  .module-switch button { padding: 6px 9px; }
+  .module-switch { gap: 0; }
+  .topbar { gap: 4px; }
+  .topbar-right { gap: 6px; }
+  .topbar h1 { font-size: 0.85rem; }
+  .counter-connection-badge { max-width: 34px; overflow: hidden; padding: 6px; }
+  .counter-connection-badge > span:last-child { display: none; }
+
+  /* On very narrow phones the login card itself shrinks below its 380px
+     max-width (login-screen has 20px padding each side) — tighten the card
+     padding and shrink the tagline a touch further so "— Smart Billing for
+     Smart Businesses —" still stays on one line instead of wrapping. */
+  .login-card { padding: 28px 20px; }
+  .brand-tagline { font-size: 0.7rem; }
+}
+
+
+/* ---------- Offline AI Assistant (floating chat button) ---------- */
+.assistant-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 60;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: #fff;
+  font-size: 1.5rem;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+  cursor: pointer;
+  opacity: 0.55;
+  transition: transform 0.15s, opacity 0.15s;
+}
+.assistant-fab:hover, .assistant-fab:focus { opacity: 1; transform: scale(1.06); }
+
+.assistant-panel {
+  position: fixed;
+  right: 20px;
+  bottom: 84px;
+  z-index: 60;
+  width: 320px;
+  max-width: calc(100vw - 40px);
+  height: 420px;
+  max-height: calc(100vh - 120px);
+  background: var(--surface, #fff);
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.assistant-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: #fff;
+  font-weight: 700;
+}
+.assistant-panel-header .icon-btn { color: #fff; }
+.assistant-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.assistant-msg {
+  max-width: 88%;
+  padding: 8px 11px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+.assistant-msg.assistant { align-self: flex-start; background: var(--bg-soft, #f1f1f1); color: var(--text, #222); }
+.assistant-msg.user { align-self: flex-end; background: var(--accent); color: #fff; }
+.assistant-msg.thinking { opacity: 0.6; font-style: italic; }
+.assistant-input-row {
+  display: flex;
+  gap: 6px;
+  padding: 10px;
+  border-top: 1px solid var(--border);
+}
+.assistant-input-row input {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 600px) {
+  .assistant-panel { right: 12px; bottom: 78px; width: calc(100vw - 24px); }
+  .assistant-fab { right: 14px; bottom: 14px; }
+}
+
+/* ---------- Scan Menu (Bulk Add Items via OCR) ---------- */
+.scan-menu-upload input[type="file"] { margin: 10px 0; }
+.scan-menu-preview { margin: 10px 0; text-align: center; }
+.scan-menu-preview img {
+  max-width: 100%;
+  max-height: 320px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+}
+.scan-menu-progress { padding: 20px 0; text-align: center; }
+.scan-progress-bar {
+  margin-top: 12px;
+  height: 8px;
+  border-radius: 4px;
+  background: #e5e7eb;
+  overflow: hidden;
+}
+.scan-progress-fill {
+  height: 100%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  transition: width 0.2s;
+}
+.scan-menu-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 42vh;
+  overflow-y: auto;
+  margin: 10px 0;
+  padding-right: 4px;
+}
+.scan-menu-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+}
+.scan-menu-row.excluded { opacity: 0.45; }
+.scan-menu-row input[type="checkbox"] { flex-shrink: 0; }
+.scan-menu-name { flex: 2; min-width: 0; }
+.scan-menu-price { flex: 1; min-width: 70px; }
+.scan-menu-category { flex: 1.4; min-width: 0; }
+.scan-menu-row input, .scan-menu-row select {
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+@media (max-width: 640px) {
+  .scan-menu-row { flex-wrap: wrap; }
+  .scan-menu-name, .scan-menu-price, .scan-menu-category { flex: 1 1 100%; }
+}
+
+/* ---------- Compact phone/tablet presentation ----------
+   Keep the desktop information architecture, but reduce type, padding and
+   gaps so the same screens feel intentional rather than oversized in a
+   browser or Android WebView. */
+@media (max-width: 640px) {
+  body { font-size: 14px; }
+  .content { padding: 12px; }
+  .page-heading { gap: 8px; margin-bottom: 10px; }
+  .page-heading-icon { width: 30px; height: 30px; border-radius: 8px; }
+  .page-heading-title { font-size: 1.05rem; }
+
+  .settings-page { gap: 12px; padding-bottom: 18px; }
+  .settings-hero { gap: 10px; padding: 14px 16px; border-radius: 13px; }
+  .settings-hero-icon { width: 38px; height: 38px; border-radius: 11px; font-size: 1.1rem; }
+  .settings-hero h1 { font-size: 1.22rem; }
+  .settings-hero p { font-size: .78rem; line-height: 1.35; }
+  .settings-eyebrow { font-size: .58rem; letter-spacing: .08em; }
+  .settings-quick-nav { gap: 5px; margin: 0; padding: 5px; border-radius: 10px; }
+  .settings-quick-nav a { padding: 6px 8px; font-size: .68rem; }
+
+  .settings-section { padding: 15px 14px; border-radius: 11px; }
+  .settings-section h2 { margin-bottom: 6px; font-size: 1rem; }
+  .settings-section h3 { font-size: .92rem; }
+  .settings-sub { font-size: .78rem; }
+  .settings-section label,
+  .settings-form label { gap: 4px; font-size: .76rem; }
+  .settings-section input:not([type="checkbox"]):not([type="radio"]),
+  .settings-section select,
+  .settings-section textarea,
+  .settings-form input:not([type="checkbox"]):not([type="radio"]),
+  .settings-form select,
+  .settings-form textarea { min-height: 36px; padding: 7px 9px; font-size: .8rem; border-radius: 8px; }
+  .settings-section textarea,
+  .settings-form textarea { min-height: 64px; }
+  .settings-fieldset { gap: 12px; padding: 12px; }
+  .settings-extra { margin-top: 12px; gap: 7px; }
+  .settings-section .btn { min-height: 34px; padding: 7px 10px; font-size: .76rem; }
+  .settings-hint { font-size: .7rem; }
+
+  .printer-preview-panel { border-radius: 10px; }
+  .printer-preview-toolbar { padding: 9px 10px; }
+  .printer-preview-stage { min-height: 235px; padding: 12px; }
+  .printer-preview { min-height: 205px; padding: 12px 10px; gap: 5px; }
+  .printer-preview-metrics b { padding: 4px 6px; font-size: .63rem; }
+}
+
+/* ─── Audit-identified missing classes ──────────────────────────────────────── */
+
+/* Section modifier stubs — paired with .settings-section for per-section overrides */
+.backup-section {}
+.features-section {}
+.manage-staff-section {}
+.integrations-section {}
+
+/* Heading/label with an inline help button — keeps text and button baseline-aligned */
+.label-with-help {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Extra contact fields (email, ID) per guest row in booking form */
+.contact-row-extra {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+/* Individual room sub-rows under a group booking summary row */
+.booking-group-subrow {
+  background: #fafafa;
+}
+.booking-group-subrow td:first-child {
+  padding-left: 28px;
+}
+
+/* Sync connection info boxes (HOST shows IP:port; CLIENT enters host address) */
+.sync-host-info,
+.sync-client-info {
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-top: 12px;
+}

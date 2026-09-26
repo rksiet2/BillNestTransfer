@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BillNest Dashboard — License Manager</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">🧾</span>
+      <div>
+        <h1>BillNest Dashboard</h1>
+        <p>Vendor-only license activity — create, track &amp; extend every key you issue.</p>
+      </div>
+    </div>
+    <button id="newLicenseBtn" class="btn btn-primary">+ New License</button>
+  </header>
+
+  <main class="content">
+    <section class="stats">
+      <div class="stat-card"><span class="stat-value" id="statTotal">0</span><span class="stat-label">Total Licenses</span></div>
+      <div class="stat-card"><span class="stat-value" id="statActive">0</span><span class="stat-label">Active</span></div>
+      <div class="stat-card"><span class="stat-value" id="statExpired">0</span><span class="stat-label">Expired</span></div>
+      <div class="stat-card"><span class="stat-value" id="statPerpetual">0</span><span class="stat-label">Perpetual</span></div>
+    </section>
+
+    <section class="table-wrap">
+      <table id="licenseTable">
+        <thead>
+          <tr>
+            <th>Client</th>
+            <th>Machine ID</th>
+            <th>Modules</th>
+            <th>Issued</th>
+            <th>Expires</th>
+            <th>Status</th>
+            <th>Notes</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="licenseRows"></tbody>
+      </table>
+      <p id="emptyState" class="empty-state" style="display:none;">No licenses issued yet. Click "+ New License" to create your first one.</p>
+    </section>
+  </main>
+
+  <!-- Create / Extend modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <button class="modal-close" id="modalClose">✕</button>
+      <h2 id="modalTitle">New License</h2>
+      <form id="licenseForm">
+        <label>
+          Client / Hotel Name
+          <input type="text" id="fClientName" placeholder="e.g. Hotel Amber Inn" required />
+        </label>
+        <label>
+          Machine ID <span class="hint">(from customer's Activation screen)</span>
+          <input type="text" id="fMachineId" placeholder="64-character machine ID" required />
+        </label>
+        <label>
+          Modules Unlocked
+          <select id="fModules">
+            <option value="both">Food Billing + Room Booking (Full App)</option>
+            <option value="food">Food Billing only</option>
+            <option value="rooms">Room Booking only</option>
+          </select>
+        </label>
+        <label class="expiry-row">
+          <span class="checkbox-row">
+            <input type="checkbox" id="fPerpetual" />
+            Perpetual (never expires)
+          </span>
+        </label>
+        <label id="expiryDateRow">
+          Expiry Date
+          <input type="date" id="fExpiry" />
+        </label>
+        <label>
+          Notes <span class="hint">(optional — plan, price, contact info, etc.)</span>
+          <textarea id="fNotes" rows="2" placeholder="e.g. Annual plan, ₹6000/yr, contact: +91 90000 00000"></textarea>
+        </label>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="submitBtn">Generate License</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Result modal: shows the generated code to copy/send -->
+  <div class="modal-overlay" id="resultOverlay">
+    <div class="modal">
+      <button class="modal-close" id="resultClose">✕</button>
+      <h2>✅ License Ready</h2>
+      <p class="hint">Send this whole code to the customer — they paste it into BillNest's Activation screen.</p>
+      <textarea id="resultBlob" readonly rows="6"></textarea>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-primary" id="copyBlobBtn">Copy Code</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

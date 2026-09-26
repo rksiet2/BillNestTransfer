@@ -1,0 +1,243 @@
+================================================================================
+BillNest — Development Change Log
+================================================================================
+
+--------------------------------------------------------------------------------
+2026-09-14  Licensing System — Full Seller/Customer Lifecycle Implementation
+--------------------------------------------------------------------------------
+
+CONTEXT
+  Reviewed the complete licensing system from the perspective of a software
+  seller and customers (hotels/restaurants). Mapped every real-world scenario:
+  new sale, 6-month plan, 1-year plan, renewal, upgrade, revoke, and expiry.
+  Identified gaps and implemented all critical missing pieces.
+
+CHANGES MADE
+
+  electron/licensing.cjs
+    - Added 7-day grace period after license expiry (app still works, badge shown)
+    - Throws 'EXPIRED' (machine-readable) instead of human string when past grace
+    - getLicenseStatus() now extracts expiresAt from blob even on failure, so
+      ActivationScreen can show the actual expiry date in the error message
+    - activateLicense() now maps 'EXPIRED' throw to a human-readable message:
+      "This license has expired. Contact the vendor to renew before activating."
+    - payload.gracePeriodDaysLeft is set (days remaining in grace) when in grace
+
+  electron/main.cjs
+    - Added hourly setInterval recheck of license status after app starts
+    - If license transitions to invalid (e.g. customer applies a revoked blob),
+      app relaunches automatically into the Activation screen
+    - Only runs for HOST/standalone installs; Client terminals are never gated
+
+  src/App.jsx
+    - Added expiryBannerDismissed state (persisted in sessionStorage)
+    - Added showExpiryBanner computed value: true when <=14 days until expiry
+      and not in grace period (grace is handled by ActivationScreen instead)
+    - Added dismissible yellow warning banner at top of app shell:
+      "Your license expires on [date] — contact your vendor to renew."
+      Changes to "only Nd left!" when <=7 days remain
+
+  src/components/Settings/LicenseInfoSection.jsx  [NEW FILE]
+    - In-app license information panel shown in Settings page
+    - Displays: Licensed hotel name, modules (Food Billing / Room Booking badges),
+      issued date, expiry date with color-coded status badge, Machine ID
+    - Status badges: Perpetual (blue), green (>30d), yellow (<=30d), red (<=7d),
+      grace (amber), expired (red)
+    - Only rendered in Electron desktop (window.api present); hidden on mobile
+
+  src/components/Settings/SettingsPage.jsx
+    - Imported LicenseInfoSection
+    - Added <LicenseInfoSection> before the "Files & Records" section
+
+  src/index.css
+    - Added .license-info-grid, .license-info-row, .license-info-label,
+      .license-info-value, .license-info-machineid, .license-info-no-payload
+    - Added .license-module-badge (green pill for module names)
+    - Added .license-expiry-badge + variants: perpetual/green/yellow/red/grace/expired
+    - Added .expiry-warning-banner and .expiry-warning-banner-dismiss
+
+  license-dashboard/server.cjs
+    - Added POST /api/licenses/:id/revoke route
+    - Revoke re-issues the license with expiresAt = yesterday
+    - Customer's app blocks access on next hourly recheck or restart once
+      they apply the new (expired) blob
+
+  license-dashboard/public/app.js
+    - Added "Revoke" button (amber) to each license row
+    - Revoke handler: POST /revoke → shows new expired blob in result overlay
+      with message explaining customer must apply it to be blocked
+    - Updated Delete confirmation text to clearly state it only removes the
+      vendor history record and does NOT revoke access on customer machine
+    - Result overlay heading + hint text now reset correctly when opening for
+      generate/extend vs revoke (previously could show stale "Revoked" heading)
+
+  license-dashboard/public/style.css
+    - Added .btn-link.btn-revoke (amber color for the Revoke button)
+
+  docs/licensing.md  [NEW FILE]
+    - Full reference documentation for the licensing system
+    - Covers: architecture, payload structure, module tiers, file locations,
+      vendor workflow, all seller/customer scenarios, grace period table,
+      feature status table, known gaps, future TO-DO list, data flow diagram
+
+SCENARIO COVERAGE (as of this session)
+
+  Seller scenarios:
+    ✅ Issue new license (6-month, 1-year, perpetual)
+    ✅ Renew / extend expiry
+    ✅ Upgrade or downgrade modules
+    ✅ Revoke access (re-issue expired blob)
+    ✅ Delete from vendor history (dashboard only, does not affect customer)
+
+  Customer scenarios:
+    ✅ First activation from unlicensed state
+    ✅ Normal use within license period
+    ✅ 14-day advance expiry warning banner (dismissible)
+    ✅ 7-day grace period after expiry (app still works, badge shown in Settings)
+    ✅ Auto-relaunch to Activation screen when grace ends
+    ✅ Activation screen shows actual expiry date when expired
+    ✅ Clear error when trying to activate an expired blob
+    ✅ In-app Settings panel showing all license details
+    ✅ Module restrictions (food-only, rooms-only, both)
+    ✅ Wrong machine detection with clear message
+    ✅ Multi-terminal: Client terminals bypass license check entirely
+
+KNOWN GAPS (offline-first design trade-offs)
+    ⚠️  Revoke requires customer to apply the new blob (cannot push remotely)
+    ⚠️  No usage reporting (no server)
+    ⚠️  No concurrent-user or seat count enforcement
+
+FILES CHANGED
+    electron/licensing.cjs
+    electron/main.cjs
+    src/App.jsx
+    src/components/Settings/LicenseInfoSection.jsx  [NEW]
+    src/components/Settings/SettingsPage.jsx
+    src/index.css
+    license-dashboard/server.cjs
+    license-dashboard/public/app.js
+    license-dashboard/public/style.css
+    docs/licensing.md  [NEW]
+    docs/changelog.log  [NEW]
+
+--------------------------------------------------------------------------------
+2026-09-14  Group Booking — Cancel All Rooms Feature
+--------------------------------------------------------------------------------
+
+CHANGES MADE
+
+  db/roomService.cjs
+    - Added cancelGroupBooking(groupId, reason, refund, refundMethod)
+    - Cancels all BOOKED/CHECKED_IN rooms in a group in a single DB transaction
+    - Refund amount/method recorded on the master room (the one that held advance)
+    - CHECKED_OUT rooms are left untouched
+
+  electron/main.cjs
+    - Added booking:cancelGroup IPC handler
+
+  electron/preload.cjs
+  electron/preload-client.cjs
+  src/mobile/remoteApi.js
+  src/mobile/webApi.js
+    - Added cancelGroupBooking to all 4 API surfaces
+
+  src/components/RoomBooking/BookingsTab.jsx
+    - Added groupCancelTarget state + openGroupCancelModal / confirmGroupCancel handlers
+    - Added "Cancel All Rooms" button (red/danger) on group summary row in desktop table
+    - Added same button in mobile card expanded view
+    - Group cancel modal shows: guest name, how many rooms will be cancelled,
+      advance refund amount/method fields (if advance was collected)
+
+--------------------------------------------------------------------------------
+2026-09-14  Mobile/Android App — Alignment with Desktop Changes
+--------------------------------------------------------------------------------
+
+GAPS FIXED IN src/mobile/webApi.js
+
+  1. CRITICAL — Discount stored on every room in group (was multiplying discount by N rooms)
+     Fix: discount: idx === 0 ? payload.discount || 0 : 0  (same as desktop)
+
+  2. HIGH — Early group check-in blocked on mobile
+     Fix: Added sibling room check in checkInBooking() — if any sibling is
+     CHECKED_IN/CHECKED_OUT, allow early check-in and advance the date to today
+
+  3. HIGH — Early group check-out blocked on mobile
+     Fix: Same sibling check added to checkOutBooking()
+
+  4. HIGH — Sibling rooms hidden when filtering bookings by date
+     Fix: After main filter, fetch all bookings sharing same bookingGroupId
+     that were excluded by the date filter (drop date filter for siblings,
+     keep status filter) — matches db/roomService.cjs listBookings logic
+
+  5. MINOR — nights() used full datetime strings (fragile near midnight/timezone)
+     Fix: Slices to date-only (YYYY-MM-DD) before constructing Date objects,
+     matching db/roomService.cjs exactly
+
+--------------------------------------------------------------------------------
+2026-09-14  Vite Port Detection — Fix for Port Collision on Restart
+--------------------------------------------------------------------------------
+
+PROBLEM
+  When Electron dev is restarted while old processes still hold port 5173,
+  Vite increments to 5174, 5175, etc. The old wait-on command required ALL
+  listed ports to respond (they never do), so Electron never launched.
+
+CHANGES MADE
+
+  scripts/wait-vite.cjs  [NEW FILE]
+    - Polls ports 5173-5185 every 300ms
+    - Exits as soon as ANY one port answers (first-match, not all-match)
+    - Timeout 30s with clear error if nothing responds
+
+  package.json
+    - electron:wait now uses: node scripts/wait-vite.cjs && cross-env ...
+    - Replaced the multi-port wait-on command
+
+  electron/main.cjs
+    - Added global.VITE_PORT_READY promise that probes ports 5173-5185 in parallel
+    - global.VITE_PORT is set to whichever port answers first
+    - app.whenReady() now awaits global.VITE_PORT_READY before createMainWindow()
+    - All loadURL() calls use ${global.VITE_PORT || 5173}
+
+--------------------------------------------------------------------------------
+2026-09-13  Group Bookings — Full Feature Implementation
+--------------------------------------------------------------------------------
+
+FEATURES ADDED
+
+  Group booking sibling display in Bookings tab
+    - listBookings() now fetches all sibling rooms sharing booking_group_id
+      even when their check-in dates fall outside the current date filter
+    - E.g. filtering "Today" for a group booked across Sep 14/15/16 shows all
+      three rooms, not just the one matching the date filter
+
+  Early check-in/check-out for group siblings
+    - checkIn() and checkOut() now allow early action if at least one sibling
+      in the group is already CHECKED_IN or CHECKED_OUT
+    - Check-in date is automatically advanced to today in both cases
+
+  Discount fix for group bookings
+    - createBooking() was writing payload.discount to every room row
+    - computeRoomCharge() deducts discount per room, causing N× overbilling
+    - Fix: discount stored only on idx===0 (master room), 0 on all others
+    - advancePayment was already correctly stored on master room only
+
+  BookingsTab.jsx frontend
+    - blockFuture check now accounts for group siblings being active
+    - "Check In" button enabled for future-dated rooms when group siblings active
+
+  Seed data (scripts/seed-demo-data.cjs)  [NEW FILE]
+    - Seeds representative demo data covering all fixed bug scenarios:
+      same-day turnover, group invoices, advance payments, night count,
+      oversized discounts, ID row presence, early group check-in scenario
+
+  Edge case tests (scripts/edge-case-test.cjs)
+    - Added Section 7 with 4 new tests:
+      1. SQLite datetime format mismatch (space vs T separator)
+      2. Combined invoice gate (blocked when any room still pending)
+      3. Advance payment cap (advance > charge → bill total >= 0)
+      4. Discount + advance sum (combined never produces negative bill)
+
+================================================================================
+END OF CHANGE LOG
+================================================================================

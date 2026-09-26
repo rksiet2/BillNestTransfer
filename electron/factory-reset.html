@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<!-- Standalone tool, not part of the Vite/React bundle, so it can't import
+     src/constants/brand.js or electron/brand.cjs — its "BillNest" mentions
+     below must be updated by hand if the product is ever renamed. -->
+<title>BillNest Reset</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: #f8fafc;
+    color: #0f172a;
+    padding: 22px;
+  }
+  h1 { font-size: 1.15rem; margin: 0 0 4px; color: #132a4d; }
+  .subtitle { font-size: 0.82rem; color: #64748b; margin: 0 0 14px; }
+  .box {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+  }
+  .box h2 { font-size: 0.85rem; margin: 0 0 8px; }
+  .box ul { margin: 0; padding-left: 18px; font-size: 0.8rem; line-height: 1.5; }
+  .keep h2 { color: #166534; }
+  .wipe h2 { color: #991b1b; }
+  label { display: block; font-size: 0.8rem; font-weight: 600; margin: 10px 0 4px; }
+  input[type=text], input[type=password] {
+    width: 100%;
+    padding: 9px 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.95rem;
+  }
+  .actions { display: flex; gap: 10px; margin-top: 16px; }
+  button {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  #cancelBtn { background: #e2e8f0; color: #0f172a; }
+  #resetBtn { background: #dc2626; color: white; }
+  #resetBtn:disabled { background: #fca5a5; cursor: not-allowed; }
+  #message { font-size: 0.82rem; margin-top: 10px; padding: 8px 10px; border-radius: 8px; display: none; }
+  #message.err { display: block; background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+  #message.ok { display: block; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+  #doneScreen { display: none; text-align: center; padding-top: 30px; }
+  #doneScreen h1 { color: #166534; }
+</style>
+</head>
+<body>
+  <div id="formScreen">
+    <h1>⚠️ BillNest — Factory Reset</h1>
+    <p class="subtitle">This tool wipes this counter's business data back to a fresh install. It runs outside the main app on purpose, so it still works even if you're locked out.</p>
+
+    <div class="box wipe">
+      <h2>Will be permanently deleted</h2>
+      <ul>
+        <li>All bills, KOT and bill/KOT record files</li>
+        <li>All room bookings and their guest details</li>
+        <li>All purchases, expenses and the stock movement ledger</li>
+        <li>All Owner &amp; Staff PIN logins (you'll set up a new Owner PIN next launch)</li>
+        <li>Hotel Settings (name, address, tax %, feature toggles) — reset to blank defaults</li>
+      </ul>
+    </div>
+    <div class="box keep">
+      <h2>Kept as-is</h2>
+      <ul>
+        <li>Food menu — categories &amp; food items</li>
+        <li>Raw materials catalog &amp; recipes (only stock quantity resets to 0)</li>
+        <li>Rooms &amp; restaurant tables list (only status resets to available/empty)</li>
+      </ul>
+    </div>
+
+    <label for="confirmText">Type RESET to confirm</label>
+    <input type="text" id="confirmText" autocomplete="off" placeholder="RESET" />
+
+    <div id="pinRow" style="display:none;">
+      <label for="ownerPin">Current Owner PIN</label>
+      <input type="password" id="ownerPin" autocomplete="off" placeholder="Owner PIN" />
+    </div>
+
+    <label style="display:flex; align-items:center; gap:8px; font-weight:600;">
+      <input type="checkbox" id="keepBackup" checked style="width:16px;height:16px;" />
+      Keep a safety backup of everything before resetting (recommended)
+    </label>
+
+    <label style="display:flex; align-items:center; gap:8px; font-weight:600; color:#b91c1c;">
+      <input type="checkbox" id="fullWipe" style="width:16px;height:16px;" />
+      Also erase the menu, rooms &amp; tables list (full reset — start completely blank)
+    </label>
+
+    <div id="message"></div>
+
+    <div class="actions">
+      <button id="cancelBtn" type="button">Cancel</button>
+      <button id="resetBtn" type="button" disabled>Factory Reset</button>
+    </div>
+  </div>
+
+  <div id="doneScreen">
+    <h1>✅ Factory reset complete</h1>
+    <p class="subtitle">BillNest is ready for first-time setup, just like a brand-new install.</p>
+    <p class="subtitle" id="backupNote" style="display:none;">A full safety backup of everything (bills, bookings, users, settings) was saved before resetting.</p>
+    <div class="actions">
+      <button id="openBackupBtn" type="button" style="background:#e2e8f0;color:#0f172a;display:none;">Open Backup Folder</button>
+      <button id="openAppBtn" type="button" style="background:#132a4d;color:white;">Open BillNest</button>
+    </div>
+  </div>
+
+<script>
+  const confirmText = document.getElementById('confirmText');
+  const ownerPin = document.getElementById('ownerPin');
+  const pinRow = document.getElementById('pinRow');
+  const keepBackup = document.getElementById('keepBackup');
+  const fullWipe = document.getElementById('fullWipe');
+  const resetBtn = document.getElementById('resetBtn');
+  const cancelBtn = document.getElementById('cancelBtn');
+  const message = document.getElementById('message');
+  const formScreen = document.getElementById('formScreen');
+  const doneScreen = document.getElementById('doneScreen');
+  const backupNote = document.getElementById('backupNote');
+  const openBackupBtn = document.getElementById('openBackupBtn');
+  const openAppBtn = document.getElementById('openAppBtn');
+
+  function showMessage(text, ok) {
+    message.textContent = text;
+    message.className = ok ? 'ok' : 'err';
+  }
+
+  function refreshResetEnabled() {
+    const textOk = confirmText.value.trim().toUpperCase() === 'RESET';
+    const pinOk = pinRow.style.display === 'none' || ownerPin.value.trim().length > 0;
+    resetBtn.disabled = !(textOk && pinOk);
+  }
+  confirmText.addEventListener('input', refreshResetEnabled);
+  ownerPin.addEventListener('input', refreshResetEnabled);
+
+  function checkStatus() {
+    window.freset.getStatus().then((status) => {
+      if (status.appRunning) {
+        showMessage('BillNest is currently open on this device. Please close it fully first — this will recheck automatically.', false);
+        resetBtn.disabled = true;
+        confirmText.disabled = true;
+        ownerPin.disabled = true;
+        setTimeout(checkStatus, 3000); // keep re-checking so this un-blocks itself the moment BillNest is closed, without needing to reopen this tool
+        return;
+      }
+      message.className = '';
+      message.textContent = '';
+      resetBtn.disabled = false;
+      confirmText.disabled = false;
+      ownerPin.disabled = false;
+      if (status.hasOwnerAccount) {
+        pinRow.style.display = 'block';
+      }
+      refreshResetEnabled();
+    });
+  }
+  checkStatus();
+
+  cancelBtn.addEventListener('click', () => window.freset.quit());
+
+  resetBtn.addEventListener('click', async () => {
+    resetBtn.disabled = true;
+    resetBtn.textContent = 'Resetting…';
+    const result = await window.freset.submit(confirmText.value.trim(), ownerPin.value.trim(), keepBackup.checked, fullWipe.checked);
+    if (!result.ok) {
+      showMessage(result.error || 'Reset failed.', false);
+      resetBtn.disabled = false;
+      resetBtn.textContent = 'Factory Reset';
+      refreshResetEnabled();
+      return;
+    }
+    formScreen.style.display = 'none';
+    doneScreen.style.display = 'block';
+    if (result.backupPath) {
+      backupNote.style.display = 'block';
+      openBackupBtn.style.display = 'block';
+    }
+  });
+
+  openBackupBtn.addEventListener('click', () => window.freset.openBackupFolder());
+  openAppBtn.addEventListener('click', () => window.freset.openMainApp());
+</script>
+</body>
+</html>

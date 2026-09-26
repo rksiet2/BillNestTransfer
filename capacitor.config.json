@@ -1,0 +1,8 @@
+{
+  "appId": "com.billnest.app",
+  "appName": "BillNest",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "http"
+  }
+}

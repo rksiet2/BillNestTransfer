@@ -1,0 +1,211 @@
+================================================================================
+EXACT SESSION OUTPUT — Licensing System Design & Implementation
+Date: 2026-09-14
+================================================================================
+
+Good — the audit gives a clear picture. Let me map out every real scenario
+between seller and customer, check what's in place, identify gaps, and then
+implement what's missing.
+
+[After implementation...]
+
+Clean build. Here's the complete picture of what was added and what every
+real-world scenario now looks like:
+
+────────────────────────────────────────────────────────────────────────────────
+Seller ↔ Customer Scenario Coverage
+────────────────────────────────────────────────────────────────────────────────
+
+── As the Seller (you) ─────────────────────────────────────────────────────────
+
+Scenario                        What to do                                  What happens
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+New customer, 6-month plan      Dashboard → New License, set expiry to      Generate blob, send to customer
+                                +6 months, choose modules (Food/Rooms/Both)
+
+New customer, 1-year plan       Same, set expiry to +12 months              Generate blob, send
+
+New customer, perpetual plan    Tick "Perpetual (never expires)"            Signed with expiresAt: null, never expires
+
+Renewal — customer wants        Dashboard → Extend, set new expiry date     New blob re-issued to same machine,
+to extend                                                                   send to customer
+
+Upgrade — food-only to full     Dashboard → Extend, change modules to       Re-issued blob with new modules,
+                                "Both"                                      send to customer
+
+Downgrade                       Same, change modules                        Re-issued blob
+
+Revoke (stop payment            Dashboard → Revoke button (amber)           Re-issues blob with expiresAt =
+mid-month)                                                                  yesterday, shows you the new blob.
+                                                                            Send to customer → once they paste
+                                                                            it, access blocked. If they don't
+                                                                            paste it, blocked on natural expiry
+
+Delete from history             Dashboard → Delete                          Only removes your own record.
+                                                                            App on customer machine unaffected.
+                                                                            Confirmation dialog now clearly
+                                                                            says this
+
+
+── As the Customer ─────────────────────────────────────────────────────────────
+
+Scenario                            Experience
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+First install, unlicensed           Activation screen shown immediately — copy Machine ID, paste license code, relaunch
+
+License expires while app           Hourly recheck detects it → automatic relaunch → Activation screen
+is open
+
+License expires, app is closed      On next start → Activation screen
+
+14 days before expiry               Yellow banner appears at top of app:
+                                    "Your license expires on [date] — contact your vendor to renew."
+                                    Dismissible per-session
+
+7 days before expiry                Same banner, more urgent text: "only 7 days left!"
+
+Past expiry, within 7-day grace     App still works. Banner gone (grace = Activation screen territory).
+                                    Settings shows "Grace period — Nd left" badge in red
+
+Past grace (8+ days after expiry)   Activation screen shows with "contact vendor to renew" message
+
+Trying to activate expired blob     Activation shows: "This license has expired. Contact the vendor
+                                    to renew before activating."
+
+Sees their own license info         Settings → License section: Hotel name, modules (Food Billing /
+                                    Room Booking badges), issued date, expiry date with color-coded
+                                    badge, Machine ID
+
+Wrong machine                       Activation screen: "This license is bound to a different computer"
+
+Food-only license                   Room Booking module hidden everywhere in the app
+
+Rooms-only license                  Food Billing module hidden
+
+
+── Gaps that remain (by design, offline-first trade-offs) ──────────────────────
+
+Gap                         Why                                     Workaround
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+Revoke requires customer    Offline app — can't push to customer's  Issue short-expiry blob; they must
+cooperation                 machine                                 apply it, OR wait for natural
+                                                                    expiry + grace to pass
+
+No usage reporting          No server                               You rely on trust/notes field
+                                                                    in dashboard
+
+No concurrent-user cap      No server                               License is per-machine, not per-user
+
+────────────────────────────────────────────────────────────────────────────────
+AUDIT REPORT: What Was In Place Before (Summary)
+────────────────────────────────────────────────────────────────────────────────
+
+Feature                     Status    Details
+────────────────────────────────────────────────────────────────────────────────
+Expiry Dates                YES       expiresAt in payload, checked at activation & validation
+Perpetual Licenses          YES       expiresAt: null means never-expiring
+Machine Binding             YES       SMBIOS UUID → SHA256, bound to specific hardware
+Module Tiers                YES       food | rooms | both (cheaper plans possible)
+Customer Name Storage       YES       hotelName in payload
+Cryptographic Signing       YES       Ed25519, unhackable without private key
+Offline Validation          YES       Entirely local, no internet calls
+Grace Period                NO        Hard expiry check — app goes dark immediately
+Remote Revocation           NO        No mechanism to revoke already-issued license
+License Renewal             YES       Dashboard can "extend" by re-issuing
+Copy-Protection             YES       Machine ID embedded in signature
+Multi-Terminal Support      YES       Only HOST needs license, Clients bypass check
+In-App License Info         NO        No Settings screen showing expiry/modules/name
+Expiry Warning Banner       NO        No advance notification before expiry
+Runtime Re-check            NO        License only checked at startup, never again
+Revoke Action in Dashboard  NO        Delete just removed vendor history record
+
+────────────────────────────────────────────────────────────────────────────────
+WHAT WAS BUILT IN THIS SESSION
+────────────────────────────────────────────────────────────────────────────────
+
+1. GRACE PERIOD (7 days after expiry)
+   File: electron/licensing.cjs
+   - Instead of throwing immediately when expiresAt < Date.now(), allows a
+     7-day grace window
+   - Returns payload with gracePeriodDaysLeft field when in grace
+   - getLicenseStatus() returns { valid: true, payload: { gracePeriodDaysLeft: N } }
+     during grace period
+   - Returns { valid: false, reason: 'EXPIRED' } after grace ends
+   - getLicenseStatus() now extracts expiresAt from blob even on failure so
+     ActivationScreen can show the actual expiry date
+   - activateLicense() maps 'EXPIRED' to human message:
+     "This license has expired. Contact the vendor to renew before activating."
+
+2. IN-APP LICENSE INFO PANEL (Settings page)
+   File: src/components/Settings/LicenseInfoSection.jsx  [NEW]
+   File: src/components/Settings/SettingsPage.jsx  [MODIFIED]
+   - Shows: licensed hotel name, modules (Food Billing / Room Booking badges),
+     issued date, expiry date with color-coded status badge, Machine ID
+   - Status badges:
+       Perpetual  → blue
+       > 30 days  → green
+       <= 30 days → yellow
+       <= 7 days  → red
+       Grace      → amber ("Grace period — Nd left to renew")
+       Expired    → red
+   - Only shown in Electron desktop (window.api present), never on mobile
+   - Placed before the "Files & Records" section in Settings
+
+3. PERIODIC RUNTIME RE-CHECK (every 1 hour)
+   File: electron/main.cjs
+   - setInterval checks license status every 60 minutes after app starts
+   - If license transitions from valid to invalid (e.g. revoked blob applied),
+     calls app.relaunch(); app.exit(0) → shows Activation screen
+   - Only runs for HOST/standalone installs; Client terminals are never gated
+
+4. EXPIRY WARNING BANNER (14 days advance warning)
+   File: src/App.jsx
+   - Dismissible yellow banner at top of app shell when <= 14 days until expiry
+   - "Your license expires on [date] — contact your vendor to renew."
+   - Changes to "only Nd left!" when <= 7 days remain
+   - Dismissed state stored in sessionStorage (doesn't re-appear within session)
+   - NOT shown during grace period (that state → Activation screen instead)
+
+5. SELLER DASHBOARD — REVOKE ACTION
+   File: license-dashboard/server.cjs
+   - Added POST /api/licenses/:id/revoke route
+   - Re-issues license with expiresAt = yesterday
+   - Customer's app blocks access on next hourly recheck or restart once
+     they apply the new expired blob
+
+   File: license-dashboard/public/app.js
+   - Added "Revoke" button (amber) in each license row's actions
+   - Revoke handler calls /revoke endpoint, shows new expired blob in result
+     overlay with instructions: "Send to customer — once they apply it, blocked"
+   - Updated Delete confirmation text to clearly state it only removes vendor
+     history, does NOT revoke access on customer's machine
+   - Result overlay heading/hint text now resets correctly for generate vs revoke
+
+   File: license-dashboard/public/style.css
+   - Added .btn-link.btn-revoke (amber color)
+
+   File: src/index.css
+   - Added license info panel CSS classes (.license-info-*, .license-module-badge,
+     .license-expiry-badge and variants)
+   - Added expiry warning banner CSS (.expiry-warning-banner, .expiry-warning-banner-dismiss)
+
+────────────────────────────────────────────────────────────────────────────────
+FILES CHANGED IN THIS SESSION
+────────────────────────────────────────────────────────────────────────────────
+
+  electron/licensing.cjs                              MODIFIED
+  electron/main.cjs                                   MODIFIED
+  src/App.jsx                                         MODIFIED
+  src/components/Settings/LicenseInfoSection.jsx      NEW
+  src/components/Settings/SettingsPage.jsx            MODIFIED
+  src/index.css                                       MODIFIED
+  license-dashboard/server.cjs                        MODIFIED
+  license-dashboard/public/app.js                     MODIFIED
+  license-dashboard/public/style.css                  MODIFIED
+  docs/licensing.md                                   NEW
+  docs/changelog.log                                  NEW
+  docs/licensing-session-output.txt                   NEW (this file)
+
+================================================================================
+END OF SESSION OUTPUT
+================================================================================

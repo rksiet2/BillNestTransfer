@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- BillNest brand navy — matches build/icon-512.png's badge background,
+         used as the OS-supplied background layer behind the adaptive-icon
+         foreground mark (see mipmap-anydpi-v26/ic_launcher.xml). Was the
+         default Capacitor scaffold's plain white (#FFFFFF). -->
+    <color name="ic_launcher_background">#0a1730</color>
+</resources>

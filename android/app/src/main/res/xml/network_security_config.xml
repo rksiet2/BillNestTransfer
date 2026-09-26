@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Multi-Terminal Sync / "Connect to a Counter" mode needs this phone to talk
+  plain HTTP (not HTTPS) to a desktop Host on the same WiFi/LAN
+  (electron/lanServer.cjs has no TLS — it's a small dependency-free LAN-only
+  server, never exposed to the public internet). Android 9+ (API 28+) blocks
+  cleartext (HTTP) traffic by default, which silently breaks every
+  fetch()/XHR call this app makes to http://<host-ip>:<port>/rpc.
+
+  AndroidManifest.xml's android:usesCleartextTraffic="true" already allows
+  this app-wide, but this network-security-config additionally documents
+  (and, if that manifest flag is ever removed/tightened later, actually
+  enforces) that cleartext is only intended for private LAN addresses, not
+  arbitrary internet hosts — the safer, more explicit way to allow local
+  network HTTP without loosening security for genuine internet traffic.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

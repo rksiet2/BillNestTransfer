@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/app-icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Static fallback only — src/main.jsx overwrites this via
+         `document.title = APP_NAME` (src/constants/brand.js) once React
+         boots, so this literal only briefly flashes during initial load.
+         Keep it roughly in sync with APP_NAME anyway. -->
+    <title>BillNest</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

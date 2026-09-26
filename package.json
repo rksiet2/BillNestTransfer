@@ -1,0 +1,99 @@
+{
+  "name": "billnest",
+  "private": true,
+  "version": "1.0.0",
+  "description": "BillNest — lightweight desktop hotel/restaurant billing & room booking software with menu management, billing, reporting and search.",
+  "author": "Your Hotel",
+  "type": "module",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "lint": "oxlint",
+    "test:regression": "node scripts/regression-test.cjs",
+    "test:webapi": "node scripts/webapi-smoke-test.mjs",
+    "test:bill-share": "node scripts/bill-share-test.mjs",
+    "test:mobile-storage": "node scripts/mobile-storage-test.mjs",
+    "test:assistant": "node scripts/assistant-engine-test.mjs",
+    "test:multidevice": "node scripts/multidevice-test.cjs",
+    "test:edgecases": "node scripts/edge-case-test.cjs",
+    "test:print": "node scripts/print-window-regression-test.cjs",
+    "test:all": "npm run test:regression && npm run test:webapi && npm run test:bill-share && npm run test:mobile-storage && npm run test:assistant && npm run test:multidevice && npm run test:edgecases && npm run test:print",
+    "preview": "vite preview",
+    "electron:dev": "concurrently -k -n VITE,ELECTRON -c blue,green \"npm:dev\" \"npm run electron:wait\"",
+    "electron:wait": "node scripts/wait-vite.cjs && cross-env NODE_ENV=development electron .",
+    "electron:build": "npm run build && electron-builder",
+    "electron:build:win": "npm run build && electron-builder --win",
+    "dashboard": "node license-dashboard/server.cjs"
+  },
+  "dependencies": {
+    "@fontsource/dm-sans": "^5.3.0",
+    "@fontsource/inter": "^5.3.0",
+    "@fontsource/poppins": "^5.3.0",
+    "@iconscout/react-unicons": "^2.2.5",
+    "@whiskeysockets/baileys": "^7.0.0-rc14",
+    "better-sqlite3": "^13.0.3",
+    "qrcode": "^1.5.4",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "tesseract.js": "^5.1.1",
+    "uuid": "^14.0.2"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^8.5.1",
+    "@capacitor/cli": "^8.5.1",
+    "@capacitor/core": "^8.5.1",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.1.0",
+    "concurrently": "^10.0.5",
+    "cross-env": "^10.1.0",
+    "electron": "^44.2.0",
+    "electron-builder": "^26.15.3",
+    "oxlint": "^1.79.0",
+    "png-to-ico": "^3.0.2",
+    "sharp": "^0.35.4",
+    "vite": "^8.2.2",
+    "wait-on": "^9.1.0"
+  },
+  "build": {
+    "appId": "com.billnest.app",
+    "productName": "BillNest",
+    "icon": "build/icon.ico",
+    "npmRebuild": false,
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "db/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "build/icon.ico",
+        "to": "build/icon.ico"
+      },
+      {
+        "from": "build/icon-reset.ico",
+        "to": "build/icon-reset.ico"
+      }
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "include": "build/installer.nsh"
+    }
+  },
+  "allowScripts": {
+    "better-sqlite3@13.0.3": true,
+    "electron-winstaller@5.4.0": true
+  }
+}
